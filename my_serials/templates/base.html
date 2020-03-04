@@ -1,0 +1,13 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <title>{% block title %}MY DEFAULT TITLE{% endblock %}</title>
+</head>
+<body>
+<header>
+    <a href="{% url "my_serials:create_form" %}">add serial</a>
+</header>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

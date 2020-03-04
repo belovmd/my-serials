@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}My Serials{% endblock %}
+
+{% block content %}
+    <h1>My Serials</h1>
+    {% for serial in serials %}
+        <p>
+            Id {{ serial.serial_id }}
+            Title {{ serial.title }}
+            Air Date {{ serial.air_date }}
+        </p>
+    {% endfor %}
+{% endblock %}
