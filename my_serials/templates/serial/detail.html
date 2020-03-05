@@ -3,10 +3,13 @@
 {% block title %}Serial{% endblock %}
 
 {% block content %}
-
+<a href="{% url "my_serials:all_serials" %}">My Serials</a>
     <h1>{{ material.title }}</h1>
     <p>
         {{ serial.serial_id }}
+        {{ serial.title }}
+        {{ serial.air_date }}
+
     </p>
 
 {% endblock %}

@@ -6,9 +6,16 @@
     <h1>My Serials</h1>
     {% for serial in serials %}
         <p>
-            Id {{ serial.serial_id }}
-            Title {{ serial.title }}
-            Air Date {{ serial.air_date }}
+            <img class="details__image" src='https://image.tmdb.org/t/p/w200{{ serial.poster_path }}'/>
+        </p>
+        <p>
+            <a href="{% url 'details' %}{{ serial.serial_id }}" id="modal-trigger" class="movies__item-expander">{{ serial.title }}</a>
+            <a href="{{ serial.get_absolute_url }}">{{ serial.title }}</a>
+        </p>
+        <p>
+            Id: {{ serial.serial_id }}
+            Title: {{ serial.title }}
+            Air Date: {{ serial.air_date }}
         </p>
     {% endfor %}
 {% endblock %}

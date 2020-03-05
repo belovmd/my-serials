@@ -2,12 +2,19 @@
 <!DOCTYPE html>
 <html lang="en">
     <title>{% block title %}MY DEFAULT TITLE{% endblock %}</title>
+<head>
+<!--    <link rel="stylesheet" href="{% static 'style.css' %}"/>-->
 </head>
 <body>
 <header>
-    <a href="{% url "my_serials:create_form" %}">add serial</a>
+    <a href="{% url "my_serials:all_serials" %}">all serial</a>
+    <a href="{% url "my_serials:add_form" %}">add serial</a>
+    <a href="{% url "my_serials:search_form" %}">find serial</a>
 </header>
     {% block content %}
     {% endblock %}
+    <div class="footer">
+        <img src="{% static 'resources/powered_by_tmdb.png' %}" alt="" height="50rem" style="margin:1rem 1rem">
+    </div>
 </body>
 </html>
