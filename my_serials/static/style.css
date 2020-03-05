@@ -10,7 +10,7 @@
 html {
     font-size: 16px;
 }
-
+/*
 body::before {
     position: absolute;
     top: 0;
@@ -19,7 +19,7 @@ body::before {
     content: " ";
 	border-bottom: 0.5rem solid #00C851;
     z-index: 9999;
-}
+}*/
 
 /* global styles */
 

@@ -5,13 +5,8 @@ from django.urls import reverse
 
 
 class Serial(models.Model):
-    poster_path = models.CharField(max_length=100)
     serial_id = models.IntegerField(unique=True)
+    poster_path = models.CharField(max_length=100)
     title = models.CharField(max_length=50)
     air_date = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=50)
     objects = models.Manager()
-
-    def get_absolute_url(self):
-        return reverse('my_serials:serial_details',
-                       args=[self.serial_id, self.slug])

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title%} login {% endblock%}
+{% block content%}
+{% if form.errors %}
+    bad credentials
+{% endif %}
+<form action="{% url "my_serials:login" %}" method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <p><input type="submit" value="login"></p>
+</form>
+<p><a href="{% url "my_serials:password_reset" %}">reset</a></p>
+{% endblock %}

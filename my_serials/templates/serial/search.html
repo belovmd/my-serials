@@ -6,7 +6,8 @@
             <form class="search-form" method="GET" action=".">
                 {{ form.as_p }}
                 {% csrf_token %}
-                <input class="search-form__query" type="text" placeholder="Search" name="query">
+                <input class="search-form__query" type="text" placeholder="Enter search word" name="query">
+                <button type="submit">Find</button>
             </form>
         </div>
     </div>
@@ -16,11 +17,11 @@
                 {% if has_result %}
                     {% for movie in search_result %}
                         <div class="movies__item">
-                            <a href="{% url 'details' %}{{ movie.id }}" id="modal-trigger" class="movies__item-expander">View Details</a>
+                            <a href="{% url 'my_serials:details' %}{{ movie.id }}" id="modal-trigger" class="movies__item-expander">View Details</a>
                             <form action="." method = "POST">
                                 {{ form.as_p }}
                                 {% csrf_token %}
-                                <input type="submit" value="Add Serial">
+                                <input type="submit" value="{{ movie.id }}">
                             </form>
                             <img class="movies__item-image" src='https://image.tmdb.org/t/p/w300{{ movie.poster_path }}' onerror="this.src='https://dummyimage.com/200x300/ababab/ffffff.png&amp;text=+NoPoster'"/>
                         </div>
