@@ -12,4 +12,5 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
 tv = tmdb.TV(60735)
 response = tv.info()
+print(response)
 print(response['next_episode_to_air'])

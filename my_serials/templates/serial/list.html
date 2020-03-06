@@ -12,7 +12,11 @@
             <img class="details__image" src='https://image.tmdb.org/t/p/w200{{ serial.poster_path }}'/>
         </p>
         <p>
-            Next Episode: {{ next_episode_to_air }} {{ next_name }}
+            <a href="delete/{{ serial.id }}">Delete</a>
+        </p>
+        <p>
+            Next Episode: {{ serial.next_to_air.next_date }} {{ serial.next_to_air.next_name }}
+            <p>{{ serial.next_to_air.overview }}</p>
         </p>
     {% endfor %}
 {% endblock %}

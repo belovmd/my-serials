@@ -7,14 +7,13 @@
 </head>
 <body>
 <header>
-    <a href="{% url "my_serials:all_serials" %}">all serial</a>
-    <a href="{% url "my_serials:add_form" %}">add serial</a>
-    <a href="{% url "my_serials:search_form" %}">find serial</a>
+    <a href="{% url "my_serials:all_serials" %}">My serials</a>
+    <a href="{% url "my_serials:search_form" %}">Add serial</a>
     {% if request.user.is_authenticated %}
         Hi {{ request.user.first_name }}
-    <a href="{% url "my_serials:logout" %}"> logout </a>
+    <a href="{% url "my_serials:logout" %}"> Logout </a>
     {% else %}
-        <a href="{% url "my_serials:login" %}"> login </a>
+        <a href="{% url "my_serials:login" %}"> Login </a>
     {% endif %}
 </header>
     {% block content %}

@@ -18,10 +18,10 @@
                     {% for movie in search_result %}
                         <div class="movies__item">
                             <a href="{% url 'my_serials:details' %}{{ movie.id }}" id="modal-trigger" class="movies__item-expander">View Details</a>
-                            <form action="." method = "POST">
-                                {{ form.as_p }}
+                            <form action="add/" method = "POST">
                                 {% csrf_token %}
-                                <input type="submit" value="{{ movie.id }}">
+                                <input type="number" name="serial_id" value="{{ movie.id }}" hidden/>
+                                <button type="submit">Add</button>
                             </form>
                             <img class="movies__item-image" src='https://image.tmdb.org/t/p/w300{{ movie.poster_path }}' onerror="this.src='https://dummyimage.com/200x300/ababab/ffffff.png&amp;text=+NoPoster'"/>
                         </div>
