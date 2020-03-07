@@ -14,14 +14,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 import tmdbsimple as tmdb
 tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
-# Create your views here.
-
 
 @login_required
 def all_serials(request):
-    serial_list = models.Serial.objects.all()
-    user_serial_list = [serial for serial in serial_list if serial.owner == request.user]
-    result = {"serials": user_serial_list}
+    serial_list = models.Serial.objects.filter(owner=request.user)
+    result = {"serials": serial_list}
     return render(request, 'serial/list.html', result)
 
 
@@ -83,7 +80,7 @@ def add_serial(request):
     if request.method == 'POST':
         new_serial = models.Serial()
         new_serial.serial_id = request.POST.get('serial_id')
-        serial_id_list = [s.serial_id for s in models.Serial.objects.all() if s.owner == request.user]
+        serial_id_list = [s.serial_id for s in models.Serial.objects.filter(owner=request.user)]
         if int(new_serial.serial_id) not in serial_id_list:
             response = tmdb.TV(request.POST.get('serial_id')).info()
             if response['in_production']:

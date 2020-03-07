@@ -4,6 +4,13 @@
 
 {% block content %}
     <h1>My Serials</h1>
+<!--    {% for comment in material.comments.all %}-->
+<!--            <p>comment #{{forloop.counter}} by {{ comment.name }} {{ comment.created }}</p>-->
+<!--            <p>{{ comment.body|linebreaks }}</p>-->
+<!--        {% empty %}-->
+<!--            <p>No serials</p>-->
+<!--    {% endfor %}-->
+
     {% for serial in serials %}
         <p>
             <a href="{% url 'my_serials:details' %}{{ serial.serial_id }}" id="modal-trigger" class="movies__item-expander">{{ serial.title }} {{ serial.air_date }}</a>
