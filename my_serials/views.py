@@ -17,21 +17,31 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
 @login_required
 def all_serials(request):
-    serial_list = models.Serial.objects.filter(owner=request.user)
+    serial_list = models.Serial.objects.filter(owner=request.user).order_by('title')
     result = {"serials": serial_list}
     return render(request, 'serial/list.html', result)
 
 
+@login_required
 def search_form(request):
+    serial_list = models.Serial.objects.filter(owner=request.user)
     query = str(request.GET.get('query', ''))
     if query != '':
         search_result = tmdb.Search().tv(query=query)['results']
-        result = {'search_result': search_result, 'has_result': True}
+        for elem in search_result:
+            elem['in_production'] = tmdb.TV(elem['id']).info()['in_production']
+            elem['first_air_date'] = elem.get('first_air_date', 'N/A')[:4]
+            if elem['id'] in [s.serial_id for s in serial_list]:
+                elem['in_list'] = True
+            else:
+                elem['in_list'] = False
+        result = {'search_result': search_result}
     else:
-        result = {'search_result': [], 'has_result': False}
+        result = {'search_result': []}
     return render(request, 'serial/search.html', result)
 
 
+@login_required
 def details(request, db_id=None):
     tv = tmdb.TV(db_id)
     # trailers = list(filter(lambda v: v['type'] == 'Trailer', serial.videos()['results']))
@@ -40,8 +50,10 @@ def details(request, db_id=None):
     from pprint import pprint
     # pprint(movie.reviews()['results'])
     result = {
-        "info": tv.info(),
-        "year": tv.info()['first_air_date'][:4],
+        'info': tv.info(),
+        'year': tv.info()['first_air_date'][:4],
+        'in_production': tv.info()['in_production'],
+
         # "cast": movie.credits()['cast'][:15],
         # "crew": movie.credits()['crew'][:15],
         # "trailers": trailers,
@@ -53,46 +65,17 @@ def details(request, db_id=None):
     return render(request, "serial/details.html", result)
 
 
-# def add_form(request):
-#     if request.method == 'POST':
-#         serial_form = forms.SerialForm(request.POST)
-#         if serial_form.is_valid():
-#             cd = serial_form.cleaned_data
-#             db_id = cd['serial_id']
-#             new_serial = serial_form.save(commit=False)
-#             serial_db = tmdb.TV(db_id)
-#             response = serial_db.info()
-#
-#             new_serial.poster_path = response['poster_path']
-#             new_serial.title = response['name']
-#             new_serial.air_date = response['first_air_date'][0:4]
-#             new_serial.save()
-#
-#             return render(request,
-#                           'serial/list.html',
-#                           {'serial': new_serial})
-#     else:
-#         serial_form = forms.SerialForm()
-#     return render(request, "serial/add_serial.html", {'form': serial_form})
-
-
 def add_serial(request):
     if request.method == 'POST':
         new_serial = models.Serial()
         new_serial.serial_id = request.POST.get('serial_id')
-        serial_id_list = [s.serial_id for s in models.Serial.objects.filter(owner=request.user)]
-        if int(new_serial.serial_id) not in serial_id_list:
-            response = tmdb.TV(request.POST.get('serial_id')).info()
-            if response['in_production']:
-                new_serial.title = response['name']
-                new_serial.poster_path = response['poster_path']
-                new_serial.air_date = response['first_air_date'][0:4]
-                new_serial.owner = request.user
-                new_serial.save()
-            else:
-                return HttpResponse('Sorry, show is canceled')
-        else:
-            return HttpResponse('Already in your list')
+        response = tmdb.TV(request.POST.get('serial_id')).info()
+        new_serial.title = response['name']
+        new_serial.poster_path = response['poster_path']
+        if response['first_air_date']:
+            new_serial.air_date = response['first_air_date'][:4]
+        new_serial.owner = request.user
+        new_serial.save()
     return HttpResponseRedirect('/')
 
 

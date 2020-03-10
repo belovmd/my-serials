@@ -1,7 +1,7 @@
-{% block title%} logout {% endblock%}
+{% extends "base.html" %}
+{% block title%} Logout {% endblock%}
 {% block content%}
-Logged out
-<p>
-    <a href="{% url "my_serials:login" %}">Login</a>
-</p>
+<div class="alert alert-success" role="alert">
+  Logged out
+</div>
 {% endblock %}

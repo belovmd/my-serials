@@ -1,35 +1,47 @@
 {% extends "base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block content %}
-    <div class="search">
-        <div class="search__container">
-            <form class="search-form" method="GET" action=".">
-                {{ form.as_p }}
+    <div class="row justify-content-center">
+            <form class="form-inline mt-2 mt-md-0" method="GET" action=".">
                 {% csrf_token %}
-                <input class="search-form__query" type="text" placeholder="Enter search word" name="query">
-                <button type="submit">Find</button>
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" name="query" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
-        </div>
     </div>
-    <section class="result">
-        <div class="container">
-            <div class="movies">
-                {% if has_result %}
-                    {% for movie in search_result %}
-                        <div class="movies__item">
-                            <a href="{% url 'my_serials:details' %}{{ movie.id }}" id="modal-trigger" class="movies__item-expander">View Details</a>
+    <div class="container">
+        {% for serial in search_result %}
+            {% if serial.poster_path %}
+                <div>
+                    <a href="{% url 'my_serials:details' %}{{ serial.id }}">View Details</a>
+                    {% if serial.in_production %}
+                        {% if not serial.in_list %}
                             <form action="add/" method = "POST">
                                 {% csrf_token %}
-                                <input type="number" name="serial_id" value="{{ movie.id }}" hidden/>
-                                <button type="submit">Add</button>
+                                <input type="number" name="serial_id" value="{{ serial.id }}" hidden/>
+                                <button type="submit" class="btn btn-success">Add</button>
                             </form>
-                            <img class="movies__item-image" src='https://image.tmdb.org/t/p/w300{{ movie.poster_path }}' onerror="this.src='https://dummyimage.com/200x300/ababab/ffffff.png&amp;text=+NoPoster'"/>
+                        {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            Already in your list
                         </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="movies__item-title">No results found.</p>
-                {% endif %}
-            </div>
-        </div>
-    </section>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            Show is canceled
+                        </div>
+                    {% endif %}
+                    <p>{{ serial.name }}</p>
+                    <p>{{ serial.in_production }}</p>
+                    <p>{{ serial.first_air_date }}</p>
+                    <p>{{ serial.overview }}</p>
+                    <img src='https://image.tmdb.org/t/p/w300{{ serial.poster_path }}'/>
+                </div>
+            {% endif %}
+        {% empty %}
+            <p>No results found</p>
+        {% endfor %}
+    </div>
+
 {% endblock content %}

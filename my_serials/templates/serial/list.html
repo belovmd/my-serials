@@ -3,27 +3,50 @@
 {% block title %}My Serials{% endblock %}
 
 {% block content %}
-    <h1>My Serials</h1>
-<!--    {% for comment in material.comments.all %}-->
-<!--            <p>comment #{{forloop.counter}} by {{ comment.name }} {{ comment.created }}</p>-->
-<!--            <p>{{ comment.body|linebreaks }}</p>-->
-<!--        {% empty %}-->
-<!--            <p>No serials</p>-->
-<!--    {% endfor %}-->
+    <h2>Serials List</h2>
 
     {% for serial in serials %}
-        <p>
-            <a href="{% url 'my_serials:details' %}{{ serial.serial_id }}" id="modal-trigger" class="movies__item-expander">{{ serial.title }} {{ serial.air_date }}</a>
-        </p>
-        <p>
-            <img class="details__image" src='https://image.tmdb.org/t/p/w200{{ serial.poster_path }}'/>
-        </p>
-        <p>
-            <a href="delete/{{ serial.id }}">Delete</a>
-        </p>
-        <p>
-            Next Episode: {{ serial.next_to_air.next_date }} {{ serial.next_to_air.next_name }}
-            <p>{{ serial.next_to_air.overview }}</p>
-        </p>
+        <div class="media">
+            <div>
+                <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image">
+                <p>
+                <div class="btn-group btn-group-justified" role="group">
+                    <a href="{% url 'my_serials:details' %}{{ serial.serial_id }}" class="btn btn-info" role="button">Details</a>
+                    <a href="delete/{{ serial.id }}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to remove?')">Remove Serial</a>
+                </div>
+                </p>
+            </div>
+            <div class="media-body">
+                <h3 class="mt-0"><a href="{% url 'my_serials:details' %}{{ serial.serial_id }}">{{ serial.title }} ({{ serial.air_date }})</a></h3>
+                    {% if serial.next_to_air %}
+                        <p>Next Episode: {{ serial.next_to_air.next_date }} {{ serial.next_to_air.next_name }}</p>
+                        <p>{{ serial.next_to_air.overview }}</p>
+                    {% else %}
+                        <p>To be updated</p>
+                    {% endif %}
+
+            </div>
+        </div>
+        <hr class="mt-4 mb-4">
+<!--        <h3>-->
+<!--            <a href="{% url 'my_serials:details' %}{{ serial.serial_id }}">{{ serial.title }} ({{ serial.air_date }})</a>-->
+<!--        </h3>-->
+<!--        <p>-->
+<!--            <img class="details__image" src='https://image.tmdb.org/t/p/w200{{ serial.poster_path }}'/>-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <div class="btn-group" role="group" aria-label="Basic example">-->
+<!--                <a href="{% url 'my_serials:details' %}{{ serial.serial_id }}" class="btn btn-info" role="button">Details</a>-->
+<!--                <a href="delete/{{ serial.id }}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to remove?')">Remove Serial</a>-->
+<!--            </div>-->
+<!--        </p>-->
+<!--        {% if serial.next_to_air %}-->
+<!--        <p>-->
+<!--            Next Episode: {{ serial.next_to_air.next_date }} {{ serial.next_to_air.next_name }}-->
+<!--            <p>{{ serial.next_to_air.overview }}</p>-->
+<!--        </p>-->
+<!--        {% else %}-->
+<!--            <p>To be updated</p>-->
+<!--        {% endif %}-->
     {% endfor %}
 {% endblock %}
