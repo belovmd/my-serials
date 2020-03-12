@@ -15,6 +15,26 @@ import tmdbsimple as tmdb
 tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
 
+def add_serial(request):
+    if request.method == 'POST':
+        new_serial = models.Serial()
+        new_serial.serial_id = request.POST.get('serial_id')
+        response = tmdb.TV(new_serial.serial_id).info()
+        new_serial.title = response['name']
+        new_serial.poster_path = response['poster_path']
+        if response['first_air_date']:
+            new_serial.air_date = response['first_air_date'][:4]
+        new_serial.owner = request.user
+        new_serial.save()
+    return HttpResponseRedirect('/')
+
+
+def delete(request, id):
+    serial = models.Serial.objects.get(id=id)
+    serial.delete()
+    return HttpResponseRedirect("/")
+
+
 @login_required
 def all_serials(request):
     serial_list = models.Serial.objects.filter(owner=request.user).order_by('title')
@@ -23,11 +43,12 @@ def all_serials(request):
 
 
 @login_required
-def search_form(request):
+def search(request):
     serial_list = models.Serial.objects.filter(owner=request.user)
     query = str(request.GET.get('query', ''))
     if query != '':
-        search_result = tmdb.Search().tv(query=query)['results']
+        response = tmdb.Search().tv(query=query)['results']
+        search_result = [serial for serial in response if serial['poster_path']]
         for elem in search_result:
             elem['in_production'] = tmdb.TV(elem['id']).info()['in_production']
             elem['first_air_date'] = elem.get('first_air_date', 'N/A')[:4]
@@ -44,42 +65,35 @@ def search_form(request):
 @login_required
 def details(request, db_id=None):
     tv = tmdb.TV(db_id)
-    # trailers = list(filter(lambda v: v['type'] == 'Trailer', serial.videos()['results']))
-    # teasers = list(filter(lambda v: v['type'] == 'Teaser', serial.videos()['results']))
-    # keywords = movie.keywords()['keywords']
-    from pprint import pprint
-    # pprint(movie.reviews()['results'])
+    seasons = tv.info()['seasons']
+    for season in seasons:
+        tv_s = tmdb.TV_Seasons(db_id, season['season_number']).info()['episodes']
+        season['episodes'] = tv_s
     result = {
+        'seasons': seasons,
         'info': tv.info(),
         'year': tv.info()['first_air_date'][:4],
-        'in_production': tv.info()['in_production'],
-
-        # "cast": movie.credits()['cast'][:15],
-        # "crew": movie.credits()['crew'][:15],
-        # "trailers": trailers,
-        # "teasers": teasers,
-        # "keywords": keywords,
-        # "reviews": movie.reviews()['results'],
-        # "alt": movie.alternative_titles()['titles']
+        'cast': tv.credits()['cast'][:15],
+        'created_by': tv.info()['created_by'],
     }
     return render(request, "serial/details.html", result)
 
 
-def add_serial(request):
+def register(request):
     if request.method == 'POST':
-        new_serial = models.Serial()
-        new_serial.serial_id = request.POST.get('serial_id')
-        response = tmdb.TV(request.POST.get('serial_id')).info()
-        new_serial.title = response['name']
-        new_serial.poster_path = response['poster_path']
-        if response['first_air_date']:
-            new_serial.air_date = response['first_air_date'][:4]
-        new_serial.owner = request.user
-        new_serial.save()
-    return HttpResponseRedirect('/')
+        user_form = forms.UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+            new_user = user_form.save(commit=False)
+            new_user.set_password(
+                user_form.cleaned_data['password'],
+            )
+            new_user.save()
+            # models.Profile.objects.create(user=new_user,
+            #                               photo='unknown.jpeg')
+            return render(request, 'register_done.html', {'new_user': new_user})
+    else:
+        user_form = forms.UserRegistrationForm()
+    return render(request,
+                  'register.html',
+                  {'form': user_form})
 
-
-def delete(request, id):
-    serial = models.Serial.objects.get(id=id)
-    serial.delete()
-    return HttpResponseRedirect("/")

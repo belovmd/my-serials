@@ -8,7 +8,7 @@ app_name = 'my_serials'
 
 
 class MyHackedView(au_views.PasswordResetView):
-    success_url = reverse_lazy('lesson:password_reset_done')
+    success_url = reverse_lazy('my_serials:password_reset_done')
 
 
 urlpatterns = [
@@ -18,10 +18,11 @@ urlpatterns = [
     # path('del/', views.del_serial, name='del_serial'),
 
 
-    path('search/', views.search_form, name='search_form'),
+    path('search/', views.search, name='search_form'),
     path('details/', views.details, name='details'),
     path('details/<db_id>', views.details, name='details'),
 
+    path('register/', views.register, name='register'),
 
     path('login/', au_views.LoginView.as_view(), name='login'),
     path('logout/', au_views.LogoutView.as_view(), name='logout'),

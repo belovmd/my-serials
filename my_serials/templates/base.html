@@ -4,44 +4,85 @@
     <title>{% block title %}My Serials{% endblock %}</title>
 <head>
     <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
+<!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>-->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!--Fonts-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+
     <!--Styles-->
+    <link href="{% static "style.css" %}" rel="stylesheet">
     <link href="{% static "sticky-footer-navbar.css" %}" rel="stylesheet">
     <link href="{% static "dark-mode.css" %}" rel="stylesheet">
-
 </head>
 <body>
-    <div class="container">
+    <div class="container ml-10 mr-10">
         <div class="row justify-content-center">
-            <div class="col-10">
-                <a href="{% url "my_serials:all_serials" %}">My serials</a>
-                <a href="{% url "my_serials:search_form" %}">Add serial</a>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" class="custom-control-input" id="darkSwitch" />
-                    <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+            <div class="col-11">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <span class="navbar-brand mb-0 h1">
+                        <img src="{% static 'resources/movie-icon-13.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+                        <b>My Serials</b>
+                    </span>
+<!--                <a class="navbar-brand" href="#">My Serials</a>-->
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{% url "my_serials:all_serials" %}">Serials list</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{% url "my_serials:search_form" %}">Add serial</a>
+                            </li>
+                        </ul>
+                        <div class="form-inline my-2 my-lg-0">
+                            <div class="custom-control custom-switch mr-3">
+                                <input type="checkbox" class="custom-control-input" id="darkSwitch"/>
+                                <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+                                <script src="{% static "dark-mode-switch.min.js" %}"></script>
+                            </div>
+                            {% if request.user.is_authenticated %}
+                                Welcome, {{ request.user.first_name }}!
+                                <span class="navbar-text">
+                                    <a class="nav-link" href="{% url "my_serials:logout" %}">Logout</a>
+                                </span>
+                            {% else %}
+                                Welcome!
+                                <span class="navbar-text">
+                                    <a class="nav-link" href="{% url "my_serials:login" %}">Login</a>
+                                </span>
+                            {% endif %}
+                            <img src="{% static 'resources/tmdb_green.svg' %}" alt="" height="30em">
+                        </div>
+
+                    </div>
+                </nav>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-11">
+                            {% block content %}
+                            {% endblock %}
+                        </div>
+                    </div>
                 </div>
-                <script src="{% static "dark-mode-switch.min.js" %}"></script>
-                {% if request.user.is_authenticated %}
-                    Hi {{ request.user.first_name }}
-                    <a href="{% url "my_serials:logout" %}">Logout</a>
-                {% else %}
-                    <a href="{% url "my_serials:login" %}">Login</a>
-                {% endif %}
-                <h1 class="mt-2">My Serials</h1>
-                <hr class="mt-0 mb-4">
-                {% block content %}
-                {% endblock %}
             </div>
         </div>
     </div>
+
     <footer class="footer">
         <div class="container">
             <span class="row justify-content-center">
-                 <img src="{% static 'resources/powered_by_tmdb.png' %}" alt="" height="60em">
+                 <img src="{% static 'resources/powered_by_tmdb_green.png' %}" alt="" height="60em">
             </span>
         </div>
-
     </footer>
 </body>
 </html>

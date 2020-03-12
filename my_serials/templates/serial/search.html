@@ -1,47 +1,74 @@
 {% extends "base.html" %}
-
-{% load crispy_forms_tags %}
-
+{% block title %}Search{% endblock %}
 {% block content %}
-    <div class="row justify-content-center">
-            <form class="form-inline mt-2 mt-md-0" method="GET" action=".">
-                {% csrf_token %}
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" name="query" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-    </div>
-    <div class="container">
-        {% for serial in search_result %}
-            {% if serial.poster_path %}
-                <div>
-                    <a href="{% url 'my_serials:details' %}{{ serial.id }}">View Details</a>
-                    {% if serial.in_production %}
-                        {% if not serial.in_list %}
-                            <form action="add/" method = "POST">
-                                {% csrf_token %}
-                                <input type="number" name="serial_id" value="{{ serial.id }}" hidden/>
-                                <button type="submit" class="btn btn-success">Add</button>
-                            </form>
-                        {% else %}
+<div class="mt-3 mb-3">
+    <h2>Search Serial</h2>
+</div>
+<div class="row justify-content-center mt-3 mb-3">
+    <form class="form-inline justify-content-center" method="GET" action="." style="width: 100%">
+        {% csrf_token %}
+        <input class="form-control mr-sm-2" type="text" placeholder="Search" name="query" aria-label="Search" style="width: 60%">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</div>
+{% for serial in search_result %}
+    <div class="media">
+        <div>
+            <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image">
+            <p>
+                {% if serial.in_production %}
+                    {% if not serial.in_list %}
+                        <form action="add/" method = "POST">
+                            {% csrf_token %}
+<!--                                            <input type="hidden" name="next" value="{{ next }}">-->
+                            <div class="text-center mr-3">
+                                <div class="btn-group btn-group-justified" role="group">
+                                    <button type="submit" name="serial_id" value="{{ serial.id }}" class="btn btn-success" onclick="return confirm('Add Serial to your List?')">Add to my List</button>
+                                    <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
+                                </div>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center mr-3">
+                            <div class="btn-group btn-group-justified" role="group">
+                                <button type="submit" class="btn btn-outline-success" disabled>Add</button>
+                                <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center mr-3">
+                        <div class="btn-group btn-group-justified" role="group">
+                            <button type="submit" class="btn btn-outline-success" disabled>Add</button>
+                            <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
+                        </div>
+                    </div>
+                {% endif %}
+            </p>
+        </div>
+        <div class="media-body">
+            <h3 class="mt-0" align="center"><a href="{% url 'my_serials:details' %}{{ serial.id }}">{{ serial.name }} ({{ serial.first_air_date }})</a></h3>
+                {% if serial.in_production %}
+                    {% if not serial.in_list %}
+                    {% else %}
                         <div class="alert alert-warning" role="alert">
                             Already in your list
                         </div>
-                        {% endif %}
-                    {% else %}
-                        <div class="alert alert-warning" role="alert">
-                            Show is canceled
-                        </div>
                     {% endif %}
-                    <p>{{ serial.name }}</p>
-                    <p>{{ serial.in_production }}</p>
-                    <p>{{ serial.first_air_date }}</p>
-                    <p>{{ serial.overview }}</p>
-                    <img src='https://image.tmdb.org/t/p/w300{{ serial.poster_path }}'/>
-                </div>
-            {% endif %}
-        {% empty %}
-            <p>No results found</p>
-        {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        Show is canceled
+                    </div>
+                {% endif %}
+                <p>{{ serial.overview }}</p>
+        </div>
     </div>
+    <hr class="mt-2 mb-4">
+{% empty %}
+    <div class="row justify-content-center">
+        <p>No results found</p>
+    </div>
+{% endfor %}
 
-{% endblock content %}
+
+{% endblock %}

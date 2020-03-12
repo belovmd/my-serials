@@ -1,172 +1,146 @@
 {% extends "base.html" %}
+{% load static %}
+{% block title %}{{ info.name }} ({{ year }}){% endblock %}
 {% block content %}
-<section class="result">
-    <div>
-        <div class="container">
-            <div class="details" background="https://image.tmdb.org/t/p/original{{ info.backdrop_path }}">
-                <div class="sidebar">
-                    <img class="details__image" src='https://image.tmdb.org/t/p/w300{{ info.poster_path }}'/>
+<div class="mt-3 mb-3">
+    <h2>Serial Details</h2>
+</div>
 
-                    <div class="details__content-header">
-                        <p>Runtime</p>
-                    </div>
-                    <div class="details__content" style="margin-left: 2rem">
-                        {% if info.runtime %}
-                            <p>{{ info.runtime }} mins</p>
-                        {% else %}
-                            <p>⸺</p>
-                        {% endif %}
-                    </div>
-
-
-                    <div class="details__content-header">
-                        <p>Genres</p>
-                    </div>
-                    <div class="details__content" style="margin-left: 2rem">
-                        {% if info.genres %} 
-                            {% for genre in info.genres %}
-                                <p>{{ genre.name }}</p>
-                            {% endfor %} 
-                        {% else %}
-                        <p>⸺</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="details__content-header">
-                        <p>Production</p>
-                    </div>
-                    <div class="details__content" style="margin-left: 2rem">
-                        {% if info.production_companies %} 
-                            {% for company in info.production_companies %}
-                                <p>{{ company.name }}</p>
-                            {% endfor %}
-                        {% else %}
-                            <p>⸺</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="details__content-header">
-                        <p>Spoken Languages</p>
-                    </div>
-                    <div class="details__content" style="margin-left: 2rem">
-                        {% if info.spoken_languages %}
-                            {% for language in info.spoken_languages %}
-                                <p>{{ language.name }}</p>
-                            {% endfor %}
-                        {% else %}
-                            <p>⸺</p>
-                        {% endif %}
-                    </div>
-
-                    <div class="details__content-header">
-                        <p>Trailer</p>
-                    </div>
-                    {% for trailer in trailers %}
-                    <div class="details__content" >
-                        <div class="embed-responsive embed-responsive-4by3">
-                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/{{ trailer.key }}"></iframe>
-                        </div>
-                    </div>
-                    {% endfor %}
+<div class="media">
+        <div>
+            <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ info.poster_path }}" alt="Generic placeholder image">
+            <p>
+            <p>Status: {{ info.status }}</p>
+            <p>Rating: {{ info.vote_average }}</p>
+            </p>
+        </div>
+        <div class="media-body">
+            <h3 class="mt-0" align="center">{{ info.name }} ({{ year }})</h3>
+            <nav>
+              <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-overview-tab" data-toggle="tab" href="#nav-overview" role="tab" aria-controls="nav-overview" aria-selected="true">Overview</a>
+                <a class="nav-item nav-link" id="nav-cast-tab" data-toggle="tab" href="#nav-cast" role="tab" aria-controls="nav-cast" aria-selected="false">Cast</a>
+                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Creators</a>
+              </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-overview" role="tabpanel" aria-labelledby="nav-overview-tab">
+                    <p></p>
+                    <p>{{ info.overview }}</p>
                 </div>
-
-
-                <div class="content" style="margin-left: 3rem;">
-                    <div class="details__title">
-                        <p style="display: inline;">{{ info.title }}</p>
-                        <p style="display: inline;">({{ year }})</p>
-                    </div>
-                    <div class="details__title">
-                        <i class="fa fa-star" style="color: limegreen"></i>
-                        <p style="display: inline; font-size: 2rem; color: limegreen; font-weight: 900">{{ info.vote_average }}/10</p>
-                    </div>
-                    <div class="details__content-header" style="font-size: 1.5rem; text-transform: uppercase; ">
-                        <p>{{ info.tagline }}</p>
-                    </div>
-                    <div class="details__content" style="font-size: 1rem; margin-top: 2rem">
-                        <p>
-                            {{ info.overview }}
-                        </p>
-                    </div>
-
-                    <div class="credits">
+                <div class="tab-pane fade" id="nav-cast" role="tabpanel" aria-labelledby="nav-cast-tab">
+                    <p></p>
+<!--                    {% if cast %}-->
+<!--                        {% for member in cast %}-->
+<!--                            <img class="img-thumbnail" src="https://image.tmdb.org/t/p/w138_and_h175_face{{ member.profile_path }}" alt="">-->
+<!--                            {{ member.name }}-->
+<!--                            {% if member.character %}-->
+<!--                                as {{ member.character }}-->
+<!--                            {% endif %}-->
+<!--                        {% endfor %}-->
+<!--                    {% endif %}-->
+                    <div class="card-deck justify-content-center">
                         {% if cast %}
-                        <div class="credit-list">
-                            <div class="details__content-header">
-                                <p>Cast</p>
-                            </div>
                             {% for member in cast %}
-                            <div class="details__content">
-                                <p style="display:inline;">{{ member.name }}</p>
-                                {% if member.character %}
-                                <p style="display:inline; color: limegreen; font-size: 1rem;">as {{ member.character }}</p>
-                                {% endif %}
-                            </div>
+                                <div class="card mb-3" style="width: 135px; min-width: 135px; max-width: 135px;">
+                                    <img src="https://image.tmdb.org/t/p/w138_and_h175_face{{ member.profile_path }}" class="card-img-top" alt="">
+                                    <div class="card-body">
+                                        <div class="card-text">
+                                            <b>{{ member.name }}</b>
+                                                {% if member.character %}
+                                                    as {{ member.character }}
+                                                {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
-                        </div>
-                        {% endif %} {% if crew %}
-                        <div class="credit-list">
-                            <div class="details__content-header">
-                                <p>Crew</p>
-                            </div>
-                            {% for member in crew %}
-                            <div class="details__content">
-                                <p style="display:inline;">{{ member.name }}</p>
-                                {% if member.job %}
-                                <p style="display:inline; color: limegreen; font-size: 1rem;">, {{ member.job }}</p>
-                                {% endif %}
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% endif %} {% if trailers %}
-                        <div class="content">
-                            <div class="details__content-header">
-                                <p>Also known as</p>
-                            </div>
-                            <div class="details__content" style="font-size: 1rem;">
-                                {% if alt %}
-                                    {% for title in alt %}
-                                        <p>{{ title.title }}</p>
-                                    {% endfor %}
-                                {% else %}
-                                    <p>⸺</p>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="content">
-                            <div class="details__content-header">
-                                <p>Keywords</p>
-                            </div>
-                            <div class="details__content">
-                                {% if keywords %} {% for keyword in keywords %}
-                                <p style="font-size: 1rem;">{{ keyword.name }}</p>
-                                {% endfor %} {% else %}
-                                <p>⸺</p>
-                                {% endif %}
-                            </div>
-                        </div>
                         {% endif %}
                     </div>
+
                 </div>
-                <div class="sidebar">
-                </div>
-                <div class="content" style="margin-left: 2rem;">
-                    {% if reviews %}
-                        <div class="details__content-header">
-                            <p>Reviews</p>
-                        </div>
-                        {% for review in reviews %}
-                            <div class="details__content">
-                                <p>{{ review.author }}</p>
-                                <p style="font-size: 1rem;">{{ review.content }}</p>
-                            </div>
+                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    {% if info.created_by %}
+                        {% for member in info.created_by %}
+                            <p>{{ member.name }}</p>
                         {% endfor %}
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-</section>
 
-{% endblock content %}
+<hr class="mt-2 mb-4">
+
+<div class="mt-3 mb-3">
+    <h2>Seasons</h2>
+</div>
+{% for season in seasons %}
+    {% if season.poster_path %}
+        <p><img src='https://image.tmdb.org/t/p/w200{{ season.poster_path }}'></p>
+    {% else %}
+        <p><img src="{% static 'resources/no-poster-available.png' %}" width="200px"></p>
+    {% endif %}
+    <p>Air date {{ season.air_date }}</p>
+    <p>Season number {{ season.season_number }}</p>
+    <p>Episode count {{ season.episode_count }}</p>
+    <p>Name {{ season.name }}</p>
+    <p>Overview {{ season.overview }}</p>
+
+    {% for episode in season.episodes %}
+        <p>{{ episode.air_date }}</p>
+        <p>{{ episode.episode_number }}</p>
+        <p>{{ episode.name }}</p>
+        <p>{{ episode.overview }}</p>
+    <hr class="mt-2 mb-4">
+    {% endfor %}
+{% endfor %}
+
+
+<div id="accordion">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+          Collapsible Group Item #1
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Collapsible Group Item #2
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Collapsible Group Item #3
+        </button>
+      </h5>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

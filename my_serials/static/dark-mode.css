@@ -3,9 +3,22 @@
   color: #eee;
 }
 
+[data-theme="dark"] .navbar-light {
+  color: #fff !important;
+}
+
+[data-theme="dark"] .navbar-brand {
+  color: #fff !important;
+}
+
+[data-theme="dark"] .nav-link {
+  color: #fff !important;
+}
+
 [data-theme="dark"] .bg-light {
   background-color: #333 !important;
 }
+
 
 [data-theme="dark"] .bg-white {
   background-color: #000 !important;
@@ -14,3 +27,12 @@
 [data-theme="dark"] .bg-black {
   background-color: #eee !important;
 }
+
+[data-theme="dark"] hr {
+  border-top-color: #fff !important;
+}
+
+[data-theme="dark"] .nav-link.active {
+  background-color: #333 !important;
+}
+
