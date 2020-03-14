@@ -26,19 +26,19 @@ def add_serial(request):
             new_serial.air_date = response['first_air_date'][:4]
         new_serial.owner = request.user
         new_serial.save()
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 def delete(request, id):
     serial = models.Serial.objects.get(id=id)
     serial.delete()
-    return HttpResponseRedirect("/")
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 @login_required
 def all_serials(request):
     serial_list = models.Serial.objects.filter(owner=request.user).order_by('title')
-    result = {"serials": serial_list}
+    result = {'serials': serial_list}
     return render(request, 'serial/list.html', result)
 
 
@@ -65,11 +65,19 @@ def search(request):
 @login_required
 def details(request, db_id=None):
     tv = tmdb.TV(db_id)
+    serial = list(models.Serial.objects.
+                  filter(owner=request.user, serial_id=db_id).values('id'))
+    if serial:
+        serial_id = serial[0]['id']
+    else:
+        serial_id = None
     seasons = tv.info()['seasons']
     for season in seasons:
         tv_s = tmdb.TV_Seasons(db_id, season['season_number']).info()['episodes']
         season['episodes'] = tv_s
     result = {
+        'serial': serial,
+        'serial_id': serial_id,
         'seasons': seasons,
         'info': tv.info(),
         'year': tv.info()['first_air_date'][:4],

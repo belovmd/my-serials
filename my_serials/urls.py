@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from django.contrib.auth import views as au_views
 from . import views
 from django.urls import reverse_lazy
@@ -13,12 +13,14 @@ class MyHackedView(au_views.PasswordResetView):
 
 urlpatterns = [
     path('', views.all_serials, name='all_serials'),
+    path('search/', views.search, name='search'),
+
     path('search/add/', views.add_serial, name='add_serial'),
-    path('delete/<int:id>/', views.delete, name='delete'),
-    # path('del/', views.del_serial, name='del_serial'),
+    path('details/add/', views.add_serial, name='add_serial'),
 
+    path('delete/', views.delete, name='delete'),
+    path('delete/<id>/', views.delete, name='delete'),
 
-    path('search/', views.search, name='search_form'),
     path('details/', views.details, name='details'),
     path('details/<db_id>', views.details, name='details'),
 

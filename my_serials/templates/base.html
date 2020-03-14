@@ -19,12 +19,13 @@
     <link href="{% static "style.css" %}" rel="stylesheet">
     <link href="{% static "sticky-footer-navbar.css" %}" rel="stylesheet">
     <link href="{% static "dark-mode.css" %}" rel="stylesheet">
+
 </head>
 <body>
     <div class="container ml-10 mr-10">
         <div class="row justify-content-center">
             <div class="col-11">
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
                     <span class="navbar-brand mb-0 h1">
                         <img src="{% static 'resources/movie-icon-13.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
                         <b>My Serials</b>
@@ -40,15 +41,18 @@
                                 <a class="nav-link" href="{% url "my_serials:all_serials" %}">Serials list</a>
                             </li>
                             <li class="nav-item active">
-                                <a class="nav-link" href="{% url "my_serials:search_form" %}">Add serial</a>
+                                <a class="nav-link" href="{% url "my_serials:search" %}">Add serial</a>
                             </li>
                         </ul>
+
                         <div class="form-inline my-2 my-lg-0">
                             <div class="custom-control custom-switch mr-3">
                                 <input type="checkbox" class="custom-control-input" id="darkSwitch"/>
                                 <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
                                 <script src="{% static "dark-mode-switch.min.js" %}"></script>
                             </div>
+
+                            <span>
                             {% if request.user.is_authenticated %}
                                 Welcome, {{ request.user.first_name }}!
                                 <span class="navbar-text">
@@ -60,11 +64,16 @@
                                     <a class="nav-link" href="{% url "my_serials:login" %}">Login</a>
                                 </span>
                             {% endif %}
-                            <img src="{% static 'resources/tmdb_green.svg' %}" alt="" height="30em">
-                        </div>
+                            </span>
 
+                            <span>
+                                <img src="{% static 'resources/tmdb_green.svg' %}" alt="" height="30em">
+                            </span>
+
+                        </div>
                     </div>
                 </nav>
+
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-11">
@@ -73,16 +82,18 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <span class="row justify-content-center">
-                 <img src="{% static 'resources/powered_by_tmdb_green.png' %}" alt="" height="60em">
-            </span>
+    <div class="container ml-10 mr-10">
+        <div class="row justify-content-center">
+            <div class="col-11 footer">
+                <span class="text-muted">Place sticky footer content here.</span>
+            </div>
         </div>
-    </footer>
+    </div>
+
 </body>
 </html>

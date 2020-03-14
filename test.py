@@ -27,12 +27,15 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 #     'next_name': tv['next_episode_to_air']['name'],
 #     'overview': tv['next_episode_to_air']['overview'],
 # }
-tv = tmdb.TV(60735)
-# tv_s = tmdb.TV_Seasons(60735, 1)
+# tv = tmdb.TV(60735)
+# # tv_s = tmdb.TV_Seasons(60735, 1)
 # seasons = tv.info()['seasons']
-print(tv.credits())
-print(tv.info())
+# tv_s = tmdb.TV_Seasons(60735, 1).info()
+# print(tv_s)
 
+tv = tmdb.TV(82856)
+cast = tv.credits()
+print(cast)
 # print(seasons)
 # for season in seasons:
 #     tv_s = tmdb.TV_Seasons(60735, season['season_number']).info()['episodes']

@@ -12,8 +12,33 @@
             <div class="text-center mr-3">
                 <div class="btn-group btn-group-justified" role="group">
                     <a href="{% url 'my_serials:details' %}{{ serial.serial_id }}" class="btn btn-info" role="button">Details</a>
-                    <a href="delete/{{ serial.id }}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to remove?')">Remove Serial</a>
+<!--                    <a href="delete/{{ serial.id }}" class="btn btn-danger" role="button" onclick="return confirm('Are you sure you want to remove?')">Remove Serial</a>-->
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCenter{{ serial.id }}">Remove Serial</button>
                 </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="ModalCenter{{ serial.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ serial.id }}Title" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <!-- Modal header -->
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalCenter{{ serial.id }}Title">{{ serial.title }} ({{ serial.air_date }})</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    Are you sure you want to remove this serial from your list?
+                                </div>
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <a href="{% url 'my_serials:delete' %}{{ serial.id }}" class="btn btn-danger" role="button">Remove Serial</a>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
             </p>
         </div>
@@ -30,6 +55,12 @@
     <hr class="mt-2 mb-4">
 {% endfor %}
 
+<div class="float-right align-bottom" style="position:sticky;bottom:50px;right:50px;margin-right:10px;padding:5px 3px;">
+    <div class="shadow bg-white rounded">
+        <a href="{% url "my_serials:search" %}" class="btn btn-success" role="button">Add Serial</a>
+    </div>
+</div>
 {% endblock %}
+
 
 

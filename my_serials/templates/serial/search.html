@@ -20,7 +20,6 @@
                     {% if not serial.in_list %}
                         <form action="add/" method = "POST">
                             {% csrf_token %}
-<!--                                            <input type="hidden" name="next" value="{{ next }}">-->
                             <div class="text-center mr-3">
                                 <div class="btn-group btn-group-justified" role="group">
                                     <button type="submit" name="serial_id" value="{{ serial.id }}" class="btn btn-success" onclick="return confirm('Add Serial to your List?')">Add to my List</button>
@@ -31,7 +30,7 @@
                     {% else %}
                         <div class="text-center mr-3">
                             <div class="btn-group btn-group-justified" role="group">
-                                <button type="submit" class="btn btn-outline-success" disabled>Add</button>
+                                <button type="submit" class="btn btn-outline-success" disabled>Add to my List</button>
                                 <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
                             </div>
                         </div>
@@ -39,7 +38,7 @@
                 {% else %}
                     <div class="text-center mr-3">
                         <div class="btn-group btn-group-justified" role="group">
-                            <button type="submit" class="btn btn-outline-success" disabled>Add</button>
+                            <button type="submit" class="btn btn-outline-success" disabled>Add to my List</button>
                             <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
                         </div>
                     </div>
