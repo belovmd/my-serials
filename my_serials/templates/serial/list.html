@@ -59,13 +59,16 @@
         Currently you don't have any serial in your list. You can add serial by pressing this button.
     </div>
 {% endfor %}
+{% endblock %}
 
-<div class="float-right align-bottom" style="position:sticky;bottom:50px;right:50px;margin-right:10px;padding:5px 3px;">
+{% block button %}
+<div class="float-right align-bottom float-button">
     <div class="shadow bg-white rounded">
         <a href="{% url "my_serials:search" %}" class="btn btn-success" role="button">Search Serial</a>
     </div>
 </div>
 {% endblock %}
+
 
 
 

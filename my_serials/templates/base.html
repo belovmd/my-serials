@@ -25,6 +25,7 @@
     <div class="container ml-10 mr-10">
         <div class="row justify-content-center">
             <div class="col-11 min-vh-100">
+                <!--Navbar-->
                 <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
                     <a class="navbar-brand" href="{% url "my_serials:all_serials" %}">
                         <img src="{% static 'resources/movie-icon-13.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
@@ -36,43 +37,34 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-<!--                            <li class="nav-item active">-->
-<!--                                <a class="nav-link" href="{% url "my_serials:all_serials" %}">Serials list</a>-->
-<!--                            </li>-->
-<!--                            <li class="nav-item active">-->
-<!--                                <a class="nav-link" href="{% url "my_serials:search" %}">Add serial</a>-->
-<!--                            </li>-->
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{% url "my_serials:search" %}">Search</a>
+                            </li>
                         </ul>
 
-                        <div class="form-inline my-2 my-lg-0">
-                            <div class="custom-control custom-switch mr-3">
-                                <input type="checkbox" class="custom-control-input" id="darkSwitch"/>
-                                <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
-                                <script src="{% static "dark-mode-switch.min.js" %}"></script>
-                            </div>
-
-                            <span>
-                            {% if request.user.is_authenticated %}
-                                Welcome, {{ request.user.first_name }}!
-                                <span class="navbar-text">
-                                    <a class="nav-link" href="{% url "my_serials:logout" %}">Logout</a>
-                                </span>
-                            {% else %}
-                                Welcome to MySerials!
-                                <span class="navbar-text">
-                                    <a class="nav-link" href="{% url "my_serials:login" %}">Login</a>
-                                </span>
-                            {% endif %}
-                            </span>
-
-                            <span>
-                                <img src="{% static 'resources/tmdb_green.svg' %}" alt="" height="30em">
-                            </span>
-
+                        <div class="custom-control custom-switch mr-3">
+                            <input type="checkbox" class="custom-control-input" id="darkSwitch">
+                            <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+                            <script src="{% static "dark-mode-switch.min.js" %}"></script>
                         </div>
+
+
+                        {% if request.user.is_authenticated %}
+                            Welcome, {{ request.user.first_name }}!
+                            <span class="navbar-text">
+                                <a class="nav-link" href="{% url "my_serials:logout" %}">Logout</a>
+                            </span>
+                        {% else %}
+                            Welcome to MySerials!
+                            <span class="navbar-text">
+                                <a class="nav-link" href="{% url "my_serials:login" %}">Login</a>
+                            </span>
+                        {% endif %}
+                        <img src="{% static 'resources/tmdb_green.svg' %}" alt="" height="30em">
+
                     </div>
                 </nav>
-
+                <!--Content-->
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-11">
@@ -81,10 +73,13 @@
                         </div>
                     </div>
                 </div>
-
+                <!--Button-->
+                {% block button %}
+                {% endblock %}
+                <!--Footer-->
                 <div class="container">
                     <nav class="navbar navbar-light bg-light my-footer">
-                        <span class="text-muted">Eldar Dniaprouski &copy 2020</span>
+                        <span class="text-muted">Eldar Dniaprouski &copy 2020 Powered by Bootstrap</span>
                     </nav>
                 </div>
 

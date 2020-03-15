@@ -206,7 +206,10 @@
 <hr class="mt-2 mb-4">
 
 {% endfor %}
-<div class="float-right align-bottom" style="position:sticky;bottom:50px;right:50px;margin-right:10px;padding:5px 3px;">
+{% endblock %}
+
+{% block button %}
+<div class="float-right align-bottom float-button">
     <div class="shadow bg-white rounded">
         <a href="{% url "my_serials:search" %}" class="btn btn-success" role="button">Search Serial</a>
     </div>
