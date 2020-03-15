@@ -15,8 +15,7 @@ urlpatterns = [
     path('', views.all_serials, name='all_serials'),
     path('search/', views.search, name='search'),
 
-    path('search/add/', views.add_serial, name='add_serial'),
-    path('details/add/', views.add_serial, name='add_serial'),
+    path('add/', views.add_serial, name='add_serial'),
 
     path('delete/', views.delete, name='delete'),
     path('delete/<id>/', views.delete, name='delete'),

@@ -33,9 +33,11 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 # tv_s = tmdb.TV_Seasons(60735, 1).info()
 # print(tv_s)
 
-tv = tmdb.TV(82856)
-cast = tv.credits()
-print(cast)
+# tv = tmdb.TV(82856)
+# cast = tv.credits()
+# print(cast)
+tv = tmdb.TV_Seasons(60735, 1).
+print(tv.info())
 # print(seasons)
 # for season in seasons:
 #     tv_s = tmdb.TV_Seasons(60735, season['season_number']).info()['episodes']

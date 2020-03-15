@@ -18,11 +18,37 @@
             <p>
                 {% if serial.in_production %}
                     {% if not serial.in_list %}
-                        <form action="add/" method = "POST">
+                        <form action="{% url 'my_serials:add_serial' %}" method = "POST">
                             {% csrf_token %}
                             <div class="text-center mr-3">
                                 <div class="btn-group btn-group-justified" role="group">
-                                    <button type="submit" name="serial_id" value="{{ serial.id }}" class="btn btn-success" onclick="return confirm('Add Serial to your List?')">Add to my List</button>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalCenter{{ serial.id }}">Add to my List</button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="ModalCenter{{ serial.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ serial.id }}Title" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <!-- Modal header -->
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="ModalCenter{{ serial.id }}Title">{{ serial.name }} ({{ serial.year }})</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <!-- Modal body -->
+                                                <div class="modal-body">
+                                                    Add this serial to your list?
+                                                </div>
+                                                <!-- Modal footer -->
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="serial_id" value="{{ serial.id }}" class="btn btn-success">Add</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
                                 </div>
                             </div>
@@ -46,7 +72,7 @@
             </p>
         </div>
         <div class="media-body">
-            <h3 class="mt-0" align="center"><a href="{% url 'my_serials:details' %}{{ serial.id }}">{{ serial.name }} ({{ serial.first_air_date }})</a></h3>
+            <h3 class="mt-0" align="center"><a href="{% url 'my_serials:details' %}{{ serial.id }}">{{ serial.name }} ({{ serial.year}})</a></h3>
                 {% if serial.in_production %}
                     {% if not serial.in_list %}
                     {% else %}
@@ -68,6 +94,5 @@
         <p>No results found</p>
     </div>
 {% endfor %}
-
 
 {% endblock %}

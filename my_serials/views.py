@@ -51,7 +51,12 @@ def search(request):
         search_result = [serial for serial in response if serial['poster_path']]
         for elem in search_result:
             elem['in_production'] = tmdb.TV(elem['id']).info()['in_production']
-            elem['first_air_date'] = elem.get('first_air_date', 'N/A')[:4]
+            elem['year'] = elem.get('first_air_date')
+            if elem['year']:
+                elem['year'] = elem['year'][:4]
+            else:
+                elem['year'] = 'N/A'
+
             if elem['id'] in [s.serial_id for s in serial_list]:
                 elem['in_list'] = True
             else:
@@ -71,6 +76,11 @@ def details(request, db_id=None):
         serial_id = serial[0]['id']
     else:
         serial_id = None
+    year = tv.info().get('first_air_date')
+    if year:
+        year = year[:4]
+    else:
+        year = 'N/A'
     seasons = tv.info()['seasons']
     for season in seasons:
         tv_s = tmdb.TV_Seasons(db_id, season['season_number']).info()['episodes']
@@ -80,7 +90,7 @@ def details(request, db_id=None):
         'serial_id': serial_id,
         'seasons': seasons,
         'info': tv.info(),
-        'year': tv.info()['first_air_date'][:4],
+        'year': year,
         'cast': tv.credits()['cast'][:15],
         'created_by': tv.info()['created_by'],
     }
