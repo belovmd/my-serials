@@ -38,7 +38,7 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 # print(cast)
 # tv = tmdb.TV_Seasons(60735, 1)
 # print(tv.info())
-tv = tmdb.TV(60735)
+tv = tmdb.TV(74440)
 tvs = tmdb.TV.popular(tv)
 print(tv.info())
 # print(seasons)

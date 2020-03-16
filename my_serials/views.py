@@ -115,10 +115,10 @@ def register(request):
             new_user.save()
             # models.Profile.objects.create(user=new_user,
             #                               photo='unknown.jpeg')
-            return render(request, 'register_done.html', {'new_user': new_user})
+            return render(request, 'registration/register_done.html', {'new_user': new_user})
     else:
         user_form = forms.UserRegistrationForm()
     return render(request,
-                  'register.html',
+                  'registration/register.html',
                   {'form': user_form})
 
