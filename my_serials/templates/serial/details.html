@@ -17,7 +17,7 @@
                     {% if serial_id %}
                         <div class="text-center mb-3 mr-3">
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCenter{{ serial_id }}">Remove Serial</button>
+                            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#ModalCenter{{ serial_id }}">Remove Serial</button>
                             <!-- Modal -->
                             <div class="modal fade" id="ModalCenter{{ serial_id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ serial_id }}Title" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -47,7 +47,7 @@
                             {% csrf_token %}
                             <div class="text-center mb-3 mr-3">
                                 <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalCenter{{ info.id }}">Add to my List</button>
+                                <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#ModalCenter{{ info.id }}">Add to my List</button>
                                 <!-- Modal -->
                                 <div class="modal fade" id="ModalCenter{{ info.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ info.id }}Title" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -154,7 +154,7 @@
             {% endif %}
             <p>
                 <div class="text-center mr-3">
-                    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapse{{ season.season_number }}" aria-expanded="false" aria-controls="collapse{{ season.season_number }}">
+                    <button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#collapse{{ season.season_number }}" aria-expanded="false" aria-controls="collapse{{ season.season_number }}">
                         Episodes
                     </button>
                 </div>

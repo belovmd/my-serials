@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from . import models
 from django.contrib.auth.decorators import login_required
 from . import forms
+from django.core.exceptions import ObjectDoesNotExist
 
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
@@ -17,21 +18,27 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
 def add_serial(request):
     if request.method == 'POST':
+        serial_list = models.Serial.objects.filter(owner=request.user)
+        id_list = [int(s.serial_id) for s in serial_list]
         new_serial = models.Serial()
         new_serial.serial_id = request.POST.get('serial_id')
-        response = tmdb.TV(new_serial.serial_id).info()
-        new_serial.title = response['name']
-        new_serial.poster_path = response['poster_path']
-        if response['first_air_date']:
-            new_serial.air_date = response['first_air_date'][:4]
-        new_serial.owner = request.user
-        new_serial.save()
+        if int(new_serial.serial_id) not in id_list:
+            response = tmdb.TV(new_serial.serial_id).info()
+            new_serial.title = response['name']
+            # new_serial.poster_path = response['poster_path']
+            if response['first_air_date']:
+                new_serial.air_date = response['first_air_date'][:4]
+            new_serial.owner = request.user
+            new_serial.save()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
 def delete(request, id):
-    serial = models.Serial.objects.get(id=id)
-    serial.delete()
+    try:
+        serial = models.Serial.objects.get(id=id)
+        serial.delete()
+    except ObjectDoesNotExist:
+        pass
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
@@ -86,7 +93,7 @@ def details(request, db_id=None):
         tv_s = tmdb.TV_Seasons(db_id, season['season_number']).info()['episodes']
         season['episodes'] = tv_s
     result = {
-        'serial': serial,
+        # 'serial': serial,
         'serial_id': serial_id,
         'seasons': seasons,
         'info': tv.info(),

@@ -9,7 +9,7 @@ html {
 }
 
 body {
-    font-family: 'Arvo', serif;
+    /*font-family: 'Arvo', serif;*/
     /*font-family: 'Bitter', sans-serif !important;*/
     overflow-x: hidden;
     margin-right: calc(-1 * (100vw - 100%));

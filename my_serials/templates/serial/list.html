@@ -7,13 +7,15 @@
 {% for serial in serials %}
     <div class="media">
         <div>
-            <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image">
+            <div class="text-center">
+                <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.serial_info.poster_path }}" alt="Generic placeholder image">
+            </div>
             <p>
             <div class="text-center mr-3">
-                <div class="btn-group btn-group-justified" role="group">
+                <div class="btn-group btn-group-justified btn-block" role="group">
                     <a href="{% url 'my_serials:details' %}{{ serial.serial_id }}" class="btn btn-info" role="button">Details</a>
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCenter{{ serial.id }}">Remove Serial</button>
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#ModalCenter{{ serial.id }}">Remove</button>
                 </div>
                     <!-- Modal -->
                     <div class="modal fade" id="ModalCenter{{ serial.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ serial.id }}Title" aria-hidden="true">
@@ -51,6 +53,14 @@
                         To be updated.
                     </div>
                 {% endif %}
+                <hr class="mt-2 mb-2">
+                {% if serial.last_to_air %}
+                    <div class="text-muted">
+                        <p>Previous Episode: {{ serial.last_to_air.last_date }} {{ serial.last_to_air.last_name }}</p>
+                        <p>{{ serial.last_to_air.overview }}</p>
+                    </div>
+                {% endif %}
+
         </div>
     </div>
     <hr class="mt-2 mb-4">
