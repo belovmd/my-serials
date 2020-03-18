@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% block title %}Add Serial{% endblock %}
-{% block content %}
-    <form action="." method = "POST">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <input type="submit" value="Add Serial">
-    </form>
-{% endblock %}

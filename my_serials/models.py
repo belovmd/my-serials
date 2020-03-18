@@ -10,7 +10,6 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
 class Serial(models.Model):
     serial_id = models.IntegerField()
-    # poster_path = models.CharField(max_length=100)
     title = models.CharField(max_length=50)
     air_date = models.CharField(max_length=50)
     owner = models.ForeignKey(User,
