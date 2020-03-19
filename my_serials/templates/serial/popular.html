@@ -9,7 +9,9 @@
   {% for serial in popular_list %}
   <div class="media">
     <div>
-      <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image">
+      <div class="text-center">
+        <a data-fancybox="gallery{{ serial.id }}" href="https://image.tmdb.org/t/p/original{{ serial.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image"></a>
+      </div>
       <p>
         {% if serial.in_production %}
           {% if not serial.in_list %}

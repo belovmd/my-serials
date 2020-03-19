@@ -11,7 +11,9 @@
 
 <div class="media">
   <div>
-    <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ info.poster_path }}" alt="Generic placeholder image">
+    <div class="text-center">
+      <a data-fancybox="gallery{{ serial.id }}" href="https://image.tmdb.org/t/p/original{{ info.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ info.poster_path }}" alt="Generic placeholder image"></a>
+    </div>
     <p>
       {% if info.in_production %}
     <div class="alert alert-success mr-3 text-center" role="alert">
@@ -106,7 +108,7 @@
           {% for member in cast %}
           <div class="card mb-3" style="width: 135px; min-width: 135px; max-width: 135px;">
             {% if member.profile_path %}
-              <img src="https://image.tmdb.org/t/p/w138_and_h175_face{{ member.profile_path }}" class="card-img-top" alt="">
+              <a data-fancybox="gallery_cast" href="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ member.profile_path }}" data-caption="{{ member.name }}"><img class="card-img-top" src="https://image.tmdb.org/t/p/w138_and_h175_face{{ member.profile_path }}" alt=""></a>
             {% else %}
               <img class="align-self-start mr-3" src="{% static 'resources/no_avatar.jpg' %}" width="133px">
             {% endif %}
@@ -131,7 +133,7 @@
           {% for member in info.created_by %}
           <div class="card mb-3" style="width: 135px; min-width: 135px; max-width: 135px;">
             {% if member.profile_path%}
-              <img src="https://image.tmdb.org/t/p/w138_and_h175_face{{ member.profile_path }}" class="card-img-top" alt="">
+              <a data-fancybox="gallery_crew" href="https://image.tmdb.org/t/p/w600_and_h900_bestv2{{ member.profile_path }}" data-caption="{{ member.name }}"><img class="card-img-top" src="https://image.tmdb.org/t/p/w138_and_h175_face{{ member.profile_path }}" alt=""></a>
             {% else %}
               <img class="align-self-start mr-3" src="{% static 'resources/no_avatar.jpg' %}" width="133px">
             {% endif %}
@@ -154,14 +156,13 @@
   <h2>Seasons</h2>
 </div>
 
-
 {% for season in seasons %}
 <div class="media">
   <div>
     {% if season.poster_path %}
-    <p><img class="align-self-start mr-3" src='https://image.tmdb.org/t/p/w200{{ season.poster_path }}'></p>
+      <p><a data-fancybox="gallery{{ season.id }}" href="https://image.tmdb.org/t/p/original{{ season.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ season.poster_path }}" alt="Generic placeholder image"></a></p>
     {% else %}
-    <p><img class="align-self-start mr-3" src="{% static 'resources/no-poster-available.png' %}" width="200px"></p>
+      <p><img class="align-self-start mr-3" src="{% static 'resources/no-poster-available.png' %}" width="200px"></p>
     {% endif %}
     <p>
     <div class="text-center mr-3">
@@ -188,9 +189,9 @@
     <div class="media">
       <div>
         {% if episode.still_path %}
-        <p><img class="align-self-start mr-3" src='https://image.tmdb.org/t/p/w227_and_h127_bestv2{{ episode.still_path }}'></p>
+          <p><a data-fancybox="gallery{{ season.season_number }}" href="https://image.tmdb.org/t/p/original{{ episode.still_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w227_and_h127_bestv2{{ episode.still_path }}" alt="Generic placeholder image"></a></p>
         {% else %}
-        <p><img class="align-self-start mr-3" src="{% static 'resources/no_image.jpg' %}"></p>
+          <p><img class="align-self-start mr-3" src="{% static 'resources/no_image.jpg' %}"></p>
         {% endif %}
         <div class="text-center mr-3">
           <p>Episode number: {{ episode.episode_number }}</p>

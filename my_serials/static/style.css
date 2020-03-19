@@ -11,11 +11,17 @@ html {
 body {
     /*font-family: 'Arvo', serif;*/
     /*font-family: 'Bitter', sans-serif !important;*/
-    overflow-x: hidden;
-    margin-right: calc(-1 * (100vw - 100%));
+    overflow-x: hidden !important;
+    margin-right: calc(-1 * (100vw - 100%)) !important;
+    /*overflow: auto !important;*/
     /*min-height: 100vh;
     height: 100vh;*/
 }
+
+/*.fancybox-container {
+    overflow-x: hidden;
+    margin-right: calc(-1 * (100vw - 100%));
+}*/
 
 .my-footer {
     position: absolute;

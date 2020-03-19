@@ -49,6 +49,7 @@ def all_serials(request):
     return render(request, 'serial/list.html', result)
 
 
+@login_required
 def popular(request):
     serial_list = models.Serial.objects.filter(owner=request.user)
     popular_list = tmdb.TV().popular()['results']
@@ -67,6 +68,7 @@ def popular(request):
     return render(request, 'serial/popular.html', result)
 
 
+@login_required
 def on_air_today(request):
     serial_list = models.Serial.objects.filter(owner=request.user)
     air_today_list = tmdb.TV().airing_today()['results']
@@ -82,7 +84,6 @@ def on_air_today(request):
             elem['in_list'] = False
     result = {'air_today_list': air_today_list}
     return render(request, 'serial/on_air_today.html', result)
-
 
 
 @login_required
