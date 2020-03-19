@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}On Air Today{% endblock %}
+
+{% block content %}
+  <div class="mt-3 mb-3">
+    <h2>On Air Today</h2>
+  </div>
+  {% for serial in air_today_list %}
+  <div class="media">
+    <div>
+      <img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image">
+      <p>
+      {% if not serial.in_list %}
+        <form action="{% url 'my_serials:add_serial' %}" method = "POST">
+          {% csrf_token %}
+          <div class="text-center mr-3">
+            <div class="btn-group btn-group-justified btn-block" role="group">
+              <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ModalCenter{{ serial.id }}">Add</button>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="ModalCenter{{ serial.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ serial.id }}Title" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <!-- Modal header -->
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="ModalCenter{{ serial.id }}Title">{{ serial.name }} ({{ serial.year }})</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                    Add this serial to your list?
+                  </div>
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                    <button type="submit" name="serial_id" value="{{ serial.id }}" class="btn btn-success">Add</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      {% else %}
+        <div class="text-center mr-3">
+          <div class="btn-group btn-group-justified btn-block" role="group">
+            <a href="{% url 'my_serials:details' %}{{ serial.id }}" class="btn btn-info" role="button">Details</a>
+            <button type="submit" class="btn btn-outline-success" disabled>Add</button>
+          </div>
+        </div>
+      {% endif %}
+      </p>
+    </div>
+    <div class="media-body">
+      <h3 class="mt-0" align="center"><a href="{% url 'my_serials:details' %}{{ serial.id }}">{{ serial.name }} ({{ serial.year}})</a></h3>
+      {% if not serial.in_list %}
+      {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+          Already in your list
+        </div>
+      {% endif %}
+      <p>{{ serial.overview }}</p>
+    </div>
+  </div>
+  <hr class="mt-2 mb-4">
+  {% endfor %}
+{% endblock %}
+
+{% block button %}
+  <div class="float-right align-bottom float-button">
+    <div class="shadow bg-white rounded">
+      <a href="{% url "my_serials:search" %}" class="btn btn-success" role="button">Find Serial</a>
+    </div>
+  </div>
+{% endblock %}

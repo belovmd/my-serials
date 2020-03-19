@@ -49,6 +49,42 @@ def all_serials(request):
     return render(request, 'serial/list.html', result)
 
 
+def popular(request):
+    serial_list = models.Serial.objects.filter(owner=request.user)
+    popular_list = tmdb.TV().popular()['results']
+    for elem in popular_list:
+        elem['in_production'] = tmdb.TV(elem['id']).info()['in_production']
+        elem['year'] = elem.get('first_air_date')
+        if elem['year']:
+            elem['year'] = elem['year'][:4]
+        else:
+            elem['year'] = 'N/A'
+        if elem['id'] in [s.serial_id for s in serial_list]:
+            elem['in_list'] = True
+        else:
+            elem['in_list'] = False
+    result = {'popular_list': popular_list}
+    return render(request, 'serial/popular.html', result)
+
+
+def on_air_today(request):
+    serial_list = models.Serial.objects.filter(owner=request.user)
+    air_today_list = tmdb.TV().airing_today()['results']
+    for elem in air_today_list:
+        elem['year'] = elem.get('first_air_date')
+        if elem['year']:
+            elem['year'] = elem['year'][:4]
+        else:
+            elem['year'] = 'N/A'
+        if elem['id'] in [s.serial_id for s in serial_list]:
+            elem['in_list'] = True
+        else:
+            elem['in_list'] = False
+    result = {'air_today_list': air_today_list}
+    return render(request, 'serial/on_air_today.html', result)
+
+
+
 @login_required
 def search(request):
     serial_list = models.Serial.objects.filter(owner=request.user)

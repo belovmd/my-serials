@@ -25,6 +25,9 @@ urlpatterns = [
     path('details/', views.details, name='details'),
     path('details/<db_id>', views.details, name='details'),
 
+    path('popular/', views.popular, name='popular'),
+    path('on_air_today/', views.on_air_today, name='on_air_today'),
+
     path('register/', views.register, name='register'),
 
     path('login/', au_views.LoginView.as_view(), name='login'),
