@@ -14,13 +14,13 @@ class MyHackedView(au_views.PasswordResetView):
 
 
 urlpatterns = [
-    path('', views.all_serials, name='all_serials'),
+    path('', views.my_serials_list, name='my_serials_list'),
     path('search/', views.search, name='search'),
 
     path('add/', views.add_serial, name='add_serial'),
 
     path('delete/', views.delete, name='delete'),
-    path('delete/<id>/', views.delete, name='delete'),
+    path('delete/<serial_id>/', views.delete, name='delete'),
 
     path('details/', views.details, name='details'),
     path('details/<db_id>', views.details, name='details'),
@@ -29,6 +29,7 @@ urlpatterns = [
     path('on_air_today/', views.on_air_today, name='on_air_today'),
 
     path('register/', views.register, name='register'),
+    path('edit/', views.edit, name='edit'),
 
     path('login/', au_views.LoginView.as_view(), name='login'),
     path('logout/', au_views.LogoutView.as_view(), name='logout'),

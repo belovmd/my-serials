@@ -11,7 +11,7 @@
       <div>
         <!--Poster-->
         <div class="text-center">
-          <a data-fancybox="gallery{{ serial.id }}" href="https://image.tmdb.org/t/p/original{{ serial.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image"></a>
+          <a data-fancybox="gallery{{ serial.id }}" href="https://image.tmdb.org/t/p/original{{ serial.serial_info.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.serial_info.poster_path }}" alt="Generic placeholder image"></a>
         </div>
         <p>
           <!--Button Group-->
@@ -49,19 +49,19 @@
       </div>
       <div class="media-body">
         <h3 class="mt-0" align="center"><a href="{% url 'my_serials:details' %}{{ serial.serial_id }}">{{ serial.title }} ({{ serial.air_date }})</a></h3>
-        {% if serial.next_name %}
-          <p>Next Episode: {{ serial.next_date }} {{ serial.next_name }}</p>
-          <p>{{ serial.next_overview }}</p>
+        {% if serial.serial_info.next_name %}
+          <p>Next Episode: {{ serial.serial_info.next_date }} {{ serial.serial_info.next_name }}</p>
+          <p>{{ serial.serial_info.next_overview }}</p>
         {% else %}
           <div class="alert alert-info text-center" role="alert">
             To be updated.
           </div>
         {% endif %}
         <hr class="mt-2 mb-2">
-        {% if serial.last_name %}
+        {% if serial.serial_info.last_name %}
           <div class="text-muted">
-            <p>Previous Episode: {{ serial.last_date }} {{ serial.last_name }}</p>
-            <p>{{ serial.last_overview }}</p>
+            <p>Previous Episode: {{ serial.serial_info.last_date }} {{ serial.serial_info.last_name }}</p>
+            <p>{{ serial.serial_info.last_overview }}</p>
           </div>
         {% endif %}
       </div>

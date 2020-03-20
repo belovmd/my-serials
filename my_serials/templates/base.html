@@ -20,7 +20,7 @@
   <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
 
   <!--Fancybox CSS-->
-<!--  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>-->
+  <!--  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 
   <!--Styles-->
@@ -34,7 +34,7 @@
         <!--Navbar-->
         <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
           <!--Navbar Logo-->
-          <a class="navbar-brand" href="{% url "my_serials:all_serials" %}">
+          <a class="navbar-brand" href="{% url "my_serials:my_serials_list" %}">
           <img src="{% static 'resources/movie-icon.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
           <b>MySerials</b>
           </a>
@@ -63,7 +63,9 @@
             </div>
             <!--Navbar Welcome Message Login/Logout-->
             {% if request.user.is_authenticated %}
-              Welcome, {{ request.user.first_name }}!
+              <div class="navbar-text">
+                <a class="nav-link" href="{% url "my_serials:edit" %}">Welcome, {{ request.user.first_name }}!</a>
+              </div>
               <span class="navbar-text">
                 <a class="nav-link" href="{% url "my_serials:logout" %}">Logout</a>
               </span>

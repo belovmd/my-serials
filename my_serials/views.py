@@ -13,7 +13,22 @@ from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 import tmdbsimple as tmdb
+
 tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
+
+
+def serial_info(serial_id):
+    tv = tmdb.TV(serial_id).info()
+    info = {'poster_path': tv['poster_path']}
+    if tv['last_episode_to_air']:
+        info['last_date'] = tv['last_episode_to_air']['air_date']
+        info['last_name'] = tv['last_episode_to_air']['name']
+        info['last_overview'] = tv['last_episode_to_air']['overview']
+    if tv['next_episode_to_air']:
+        info['next_date'] = tv['next_episode_to_air']['air_date']
+        info['next_name'] = tv['next_episode_to_air']['name']
+        info['next_overview'] = tv['next_episode_to_air']['overview']
+    return info
 
 
 def add_serial(request):
@@ -25,7 +40,6 @@ def add_serial(request):
         if int(new_serial.serial_id) not in id_list:
             response = tmdb.TV(new_serial.serial_id).info()
             new_serial.title = response['name']
-            # new_serial.poster_path = response['poster_path']
             if response['first_air_date']:
                 new_serial.air_date = response['first_air_date'][:4]
             new_serial.owner = request.user
@@ -33,9 +47,9 @@ def add_serial(request):
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-def delete(request, id):
+def delete(request, serial_id):
     try:
-        serial = models.Serial.objects.get(id=id)
+        serial = models.Serial.objects.get(id=serial_id)
         serial.delete()
     except ObjectDoesNotExist:
         pass
@@ -43,10 +57,25 @@ def delete(request, id):
 
 
 @login_required
-def all_serials(request):
+def my_serials_list(request):
     serial_list = models.Serial.objects.filter(owner=request.user).order_by('title')
-    result = {'serials': serial_list}
+    serials = []
+    for serial in serial_list:
+        result = {'title': serial.title,
+                  'id': serial.id,
+                  'serial_id': serial.serial_id,
+                  'air_date': serial.air_date,
+                  }
+        result.update(serial_info(serial.serial_id))
+        serials.append(result)
+    result = {'serials': serials}
     return render(request, 'serial/list.html', result)
+
+
+# def all_serials(request):
+#     serial_list = models.Serial.objects.filter(owner=request.user).order_by('title')
+#     result = {'serials': serial_list}
+#     return render(request, 'serial/list.html', result)
 
 
 @login_required
@@ -159,3 +188,22 @@ def register(request):
                   'registration/register.html',
                   {'form': user_form})
 
+
+@login_required
+def edit(request):
+    if request.method == 'POST':
+        user_form = forms.UserEditForm(instance=request.user,
+                                       data=request.POST)
+        # profile_form = forms.ProfileEditForm(instance=request.user.profile,
+        #                                      data=request.POST,
+        #                                      files=request.FILES,
+        #                                      )
+        user_form.save()
+        # profile_form.save()
+    else:
+        user_form = forms.UserEditForm(instance=request.user)
+        # profile_form = forms.ProfileEditForm(instance=request.user.profile)
+    return render(request,
+                  'registration/edit.html',
+                  {'user_form': user_form, })
+    # 'profile_form': profile_form})

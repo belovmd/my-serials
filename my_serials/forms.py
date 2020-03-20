@@ -19,3 +19,9 @@ class UserRegistrationForm(forms.ModelForm):
         if cd['password'] != cd['password2']:
             raise forms.ValidationError('bad pass')
         return cd['password2']
+
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email')
