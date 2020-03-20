@@ -19,7 +19,17 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
 def serial_info(serial_id):
     tv = tmdb.TV(serial_id).info()
-    info = {'poster_path': tv['poster_path']}
+    info = {'info': tv,
+            'name': tv['name'],
+            'poster_path': tv['poster_path'],
+            'in_production': tv['in_production'],
+            'seasons': tv['seasons'],
+            'created_by': tv['created_by'],
+            }
+    if tv['first_air_date']:
+        info['first_air_date'] = tv['first_air_date']
+    else:
+        info['first_air_date'] = 'N/A'
     if tv['last_episode_to_air']:
         info['last_date'] = tv['last_episode_to_air']['air_date']
         info['last_name'] = tv['last_episode_to_air']['name']
@@ -31,6 +41,14 @@ def serial_info(serial_id):
     return info
 
 
+def serial_credits(serial_id):
+    tv = tmdb.TV(serial_id).credits()
+    credits_list = {'cast': tv['cast'],
+                    'crew': tv['crew'],
+                    }
+    return credits_list
+
+
 def add_serial(request):
     if request.method == 'POST':
         serial_list = models.Serial.objects.filter(owner=request.user)
@@ -38,10 +56,9 @@ def add_serial(request):
         new_serial = models.Serial()
         new_serial.serial_id = request.POST.get('serial_id')
         if int(new_serial.serial_id) not in id_list:
-            response = tmdb.TV(new_serial.serial_id).info()
-            new_serial.title = response['name']
-            if response['first_air_date']:
-                new_serial.air_date = response['first_air_date'][:4]
+            tv = serial_info(new_serial.serial_id)
+            new_serial.title = tv['name']
+            new_serial.air_date = tv['first_air_date'][:4]
             new_serial.owner = request.user
             new_serial.save()
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
@@ -79,6 +96,52 @@ def my_serials_list(request):
 
 
 @login_required
+def search(request):
+    serial_list = models.Serial.objects.filter(owner=request.user)
+    query = str(request.GET.get('query', ''))
+    if query != '':
+        response = tmdb.Search().tv(query=query)['results']
+        search_result = [serial for serial in response if serial['poster_path']]
+        for elem in search_result:
+            tv = serial_info(elem['id'])
+            elem['in_production'] = tv['in_production']
+            elem['year'] = tv['first_air_date'][:4]
+            if elem['id'] in [s.serial_id for s in serial_list]:
+                elem['in_list'] = True
+            else:
+                elem['in_list'] = False
+        result = {'search_result': search_result}
+    else:
+        result = {'search_result': []}
+    return render(request, 'serial/search.html', result)
+
+
+@login_required
+def details(request, db_id=None):
+    tv = serial_info(db_id)
+    credits_list = serial_credits(db_id)
+    serial = list(models.Serial.objects.
+                  filter(owner=request.user, serial_id=db_id).values('id'))
+    if serial:
+        serial_id = serial[0]['id']
+    else:
+        serial_id = None
+    seasons = tv['seasons']
+    for season in seasons:
+        tv_s = tmdb.TV_Seasons(db_id, season['season_number']).info()['episodes']
+        season['episodes'] = tv_s
+    result = {
+        'serial_id': serial_id,
+        'seasons': seasons,
+        'info': tv['info'],
+        'year': tv['first_air_date'][:4],
+        'cast': credits_list['cast'][:15],
+        'created_by': tv['created_by'],
+    }
+    return render(request, "serial/details.html", result)
+
+
+@login_required
 def popular(request):
     serial_list = models.Serial.objects.filter(owner=request.user)
     popular_list = tmdb.TV().popular()['results']
@@ -113,61 +176,6 @@ def on_air_today(request):
             elem['in_list'] = False
     result = {'air_today_list': air_today_list}
     return render(request, 'serial/on_air_today.html', result)
-
-
-@login_required
-def search(request):
-    serial_list = models.Serial.objects.filter(owner=request.user)
-    query = str(request.GET.get('query', ''))
-    if query != '':
-        response = tmdb.Search().tv(query=query)['results']
-        search_result = [serial for serial in response if serial['poster_path']]
-        for elem in search_result:
-            elem['in_production'] = tmdb.TV(elem['id']).info()['in_production']
-            elem['year'] = elem.get('first_air_date')
-            if elem['year']:
-                elem['year'] = elem['year'][:4]
-            else:
-                elem['year'] = 'N/A'
-
-            if elem['id'] in [s.serial_id for s in serial_list]:
-                elem['in_list'] = True
-            else:
-                elem['in_list'] = False
-        result = {'search_result': search_result}
-    else:
-        result = {'search_result': []}
-    return render(request, 'serial/search.html', result)
-
-
-@login_required
-def details(request, db_id=None):
-    tv = tmdb.TV(db_id)
-    serial = list(models.Serial.objects.
-                  filter(owner=request.user, serial_id=db_id).values('id'))
-    if serial:
-        serial_id = serial[0]['id']
-    else:
-        serial_id = None
-    year = tv.info().get('first_air_date')
-    if year:
-        year = year[:4]
-    else:
-        year = 'N/A'
-    seasons = tv.info()['seasons']
-    for season in seasons:
-        tv_s = tmdb.TV_Seasons(db_id, season['season_number']).info()['episodes']
-        season['episodes'] = tv_s
-    result = {
-        # 'serial': serial,
-        'serial_id': serial_id,
-        'seasons': seasons,
-        'info': tv.info(),
-        'year': year,
-        'cast': tv.credits()['cast'][:15],
-        'created_by': tv.info()['created_by'],
-    }
-    return render(request, "serial/details.html", result)
 
 
 def register(request):
