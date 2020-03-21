@@ -14,79 +14,80 @@
         <a data-fancybox="gallery{{ serial.id }}" href="https://image.tmdb.org/t/p/original{{ info.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ info.poster_path }}" alt="Generic placeholder image"></a>
       </div>
       <p>
-        {% if info.in_production %}
-      <div class="alert alert-success mr-3 text-center" role="alert">
-        {{ info.status }}
-      </div>
-      {% if serial_id %}
-      <div class="text-center mb-3 mr-3">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#ModalCenter{{ serial_id }}">Remove Serial</button>
-        <!-- Modal -->
-        <div class="modal fade" id="ModalCenter{{ serial_id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ serial_id }}Title" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <!-- Modal header -->
-              <div class="modal-header">
-                <h5 class="modal-title" id="ModalCenter{{ serial_id }}Title">{{ info.name }} ({{ year }})</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <!-- Modal body -->
-              <div class="modal-body">
-                Are you sure you want to remove this serial from your list?
-              </div>
-              <!-- Modal footer -->
-              <div class="modal-footer">
-                <a href="{% url 'my_serials:delete' %}{{ serial_id }}" class="btn btn-danger" role="button">Remove</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
+      {% if info.in_production %}
+        <div class="alert alert-success mr-3 text-center" role="alert">
+          {{ info.status }}
         </div>
-      </div>
-      {% else %}
-      <form action="{% url 'my_serials:add_serial' %}" method = "POST">
-        {% csrf_token %}
-        <div class="text-center mb-3 mr-3">
-          <!-- Button trigger modal -->
-          <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#ModalCenter{{ info.id }}">Add to my List</button>
-          <!-- Modal -->
-          <div class="modal fade" id="ModalCenter{{ info.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ info.id }}Title" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <!-- Modal header -->
-                <div class="modal-header">
-                  <h5 class="modal-title" id="ModalCenter{{ info.id }}Title">{{ info.name }} ({{ year }})</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <!-- Modal body -->
-                <div class="modal-body">
-                  Add this serial to your list?
-                </div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                  <button type="submit" name="serial_id" value="{{ info.id }}" class="btn btn-success">Add</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        {% if serial_id %}
+          <div class="text-center mb-3 mr-3">
+            <!--Button Trigger Modal-->
+            <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#ModalCenter{{ serial_id }}">Remove Serial</button>
+            <!--Modal-->
+            <div class="modal fade" id="ModalCenter{{ serial_id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ serial_id }}Title" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <!--Modal Header-->
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="ModalCenter{{ serial_id }}Title">{{ info.name }} ({{ year }})</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <!--Modal Body-->
+                  <div class="modal-body">
+                    Are you sure you want to remove this serial from your list?
+                  </div>
+                  <!--Modal Footer-->
+                  <div class="modal-footer">
+                    <a href="{% url 'my_serials:delete' %}{{ serial_id }}" class="btn btn-danger" role="button">Remove</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
-      {% endif %}
+        {% else %}
+          <form action="{% url 'my_serials:add_serial' %}" method = "POST">
+            {% csrf_token %}
+            <div class="text-center mb-3 mr-3">
+              <!--Button Trigger Modal-->
+              <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#ModalCenter{{ info.id }}">Add to my List</button>
+              <!--Modal-->
+              <div class="modal fade" id="ModalCenter{{ info.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalCenter{{ info.id }}Title" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <!--Modal Header-->
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="ModalCenter{{ info.id }}Title">{{ info.name }} ({{ year }})</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <!--Modal Body-->
+                    <div class="modal-body">
+                      Add this serial to your list?
+                    </div>
+                    <!--Modal Footer-->
+                    <div class="modal-footer">
+                      <button type="submit" name="serial_id" value="{{ info.id }}" class="btn btn-success">Add</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        {% endif %}
       {% else %}
-      <div class="alert alert-warning mr-3 text-center" role="alert">
-        {{ info.status }}
-      </div>
+        <div class="alert alert-warning mr-3 text-center" role="alert">
+          {{ info.status }}
+        </div>
       {% endif %}
       </p>
     </div>
     <div class="media-body">
       <h3 class="mt-0" align="center">{{ info.name }} ({{ year }})</h3>
+      <!--Tabs-->
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <a class="nav-item nav-link active" id="nav-overview-tab" data-toggle="tab" href="#nav-overview" role="tab" aria-controls="nav-overview" aria-selected="true">Overview</a>

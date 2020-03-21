@@ -11,3 +11,8 @@ class SerialAdmin(admin.ModelAdmin):
     # prepopulated_fields = {'slug': ('title', )}
     # date_hierarchy = 'publish'
     # ordering = ('status', 'publish')
+
+
+@admin.register(models.Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    pass

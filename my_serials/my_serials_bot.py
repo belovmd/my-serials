@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 import tmdbsimple as tmdb
 import telebot
 
@@ -12,7 +13,31 @@ django.setup()
 from my_serials.models import Serial, User
 from my_serials.views import serial_info
 
-tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
+# tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
+
+
+# def serial_info(serial_id):
+#     tv = tmdb.TV(serial_id).info()
+#     info = {'info': tv,
+#             'name': tv['name'],
+#             'poster_path': tv['poster_path'],
+#             'in_production': tv['in_production'],
+#             'seasons': tv['seasons'],
+#             'created_by': tv['created_by'],
+#             }
+#     if tv['first_air_date']:
+#         info['first_air_date'] = tv['first_air_date']
+#     else:
+#         info['first_air_date'] = 'N/A'
+#     if tv['last_episode_to_air']:
+#         info['last_date'] = tv['last_episode_to_air']['air_date']
+#         info['last_name'] = tv['last_episode_to_air']['name']
+#         info['last_overview'] = tv['last_episode_to_air']['overview']
+#     if tv['next_episode_to_air']:
+#         info['next_date'] = tv['next_episode_to_air']['air_date']
+#         info['next_name'] = tv['next_episode_to_air']['name']
+#         info['next_overview'] = tv['next_episode_to_air']['overview']
+#     return info
 
 
 bot = telebot.TeleBot('1011249006:AAEEWYV0BqIrRkHkLMt2rT-wztmr5nXRHa0')
@@ -41,17 +66,27 @@ def send_text(message):
         bot.send_message(message.chat.id, message.chat.id)
 
     if message.text == 'My Serials':
-        user = User.objects.get(id=1)
-        serial_list = Serial.objects.filter(owner=user).order_by('title')
-        text_message = '<u>My Serials:</u>\n'
-        for elem in serial_list:
-            tv = serial_info(elem.serial_id)
-            if tv.get('next_overview'):
-                text = "<b>{} ({})</b>\n".format(tv['name'], tv['first_air_date'][:4])
-                text_message += text
-                text = "<i>{} {}</i>\n{}\n\n".format(tv['next_date'], tv['next_name'], tv['next_overview'])
-                text_message += text
-        bot.send_message(message.chat.id, text_message, parse_mode='HTML')
+        users = User.objects.all().select_related('profile')
+        user = None
+        for elem in users:
+            if elem.profile.telegram_id == message.chat.id:
+                user = elem
+
+        if not user:
+            bot.send_message(message.chat.id, '<b>You are not connected to data base!</b>', parse_mode='HTML')
+        else:
+            serial_list = Serial.objects.filter(owner=user).order_by('title')
+            text_message = '<u>My Serials:</u>\n'
+            for elem in serial_list:
+                tv = serial_info(elem.serial_id)
+                if tv.get('next_overview'):
+                    text = "<b>{} ({})</b>\n".format(tv['name'], tv['first_air_date'][:4])
+                    text_message += text
+                    text = "<i>{} {}</i>\n{}\n\n".format(tv['next_date'], tv['next_name'], tv['next_overview'])
+                    text_message += text
+                else:
+                    text_message = 'No data currently available'
+            bot.send_message(message.chat.id, text_message, parse_mode='HTML')
 
 
 if __name__ == '__main__':

@@ -14,9 +14,10 @@ from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-config = ConfigParser()
-config.read('my_serials/config.cfg')
-tmdb.API_KEY = config['tmdb']['API_KEY']
+# config = ConfigParser()
+# config.read('my_serials/config.cfg')
+# tmdb.API_KEY = config['tmdb']['API_KEY']
+tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
 
 def serial_info(serial_id):
@@ -197,16 +198,14 @@ def edit(request):
     if request.method == 'POST':
         user_form = forms.UserEditForm(instance=request.user,
                                        data=request.POST)
-        # profile_form = forms.ProfileEditForm(instance=request.user.profile,
-        #                                      data=request.POST,
-        #                                      files=request.FILES,
-        #                                      )
+        profile_form = forms.ProfileEditForm(instance=request.user.profile,
+                                             data=request.POST)
         user_form.save()
-        # profile_form.save()
+        profile_form.save()
     else:
         user_form = forms.UserEditForm(instance=request.user)
-        # profile_form = forms.ProfileEditForm(instance=request.user.profile)
+        profile_form = forms.ProfileEditForm(instance=request.user.profile)
     return render(request,
                   'registration/edit.html',
-                  {'user_form': user_form, })
-    # 'profile_form': profile_form})
+                  {'user_form': user_form,
+                   'profile_form': profile_form})
