@@ -1,20 +1,22 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from . import models
+import tmdbsimple as tmdb
+
+from configparser import ConfigParser
 from django.contrib.auth.decorators import login_required
-from . import forms
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.shortcuts import render, redirect, get_object_or_404
+from . import forms
+from . import models
 
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.views.generic import ListView
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-import tmdbsimple as tmdb
-
-tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
+config = ConfigParser()
+config.read('my_serials/config.cfg')
+tmdb.API_KEY = config['tmdb']['API_KEY']
 
 
 def serial_info(serial_id):
@@ -47,6 +49,15 @@ def serial_credits(serial_id):
                     'crew': tv['crew'],
                     }
     return credits_list
+
+
+def user_serials_check(some_user, serial_id):
+    serial_list = models.Serial.objects.filter(owner=some_user)
+    if serial_id in [s.serial_id for s in serial_list]:
+        response = True
+    else:
+        response = False
+    return response
 
 
 def add_serial(request):
@@ -97,7 +108,6 @@ def my_serials_list(request):
 
 @login_required
 def search(request):
-    serial_list = models.Serial.objects.filter(owner=request.user)
     query = str(request.GET.get('query', ''))
     if query != '':
         response = tmdb.Search().tv(query=query)['results']
@@ -106,10 +116,7 @@ def search(request):
             tv = serial_info(elem['id'])
             elem['in_production'] = tv['in_production']
             elem['year'] = tv['first_air_date'][:4]
-            if elem['id'] in [s.serial_id for s in serial_list]:
-                elem['in_list'] = True
-            else:
-                elem['in_list'] = False
+            elem['in_list'] = user_serials_check(request.user, elem['id'])
         result = {'search_result': search_result}
     else:
         result = {'search_result': []}
@@ -143,37 +150,25 @@ def details(request, db_id=None):
 
 @login_required
 def popular(request):
-    serial_list = models.Serial.objects.filter(owner=request.user)
     popular_list = tmdb.TV().popular()['results']
     for elem in popular_list:
-        elem['in_production'] = tmdb.TV(elem['id']).info()['in_production']
+        elem['in_production'] = serial_info(elem['id'])['in_production']
         elem['year'] = elem.get('first_air_date')
         if elem['year']:
             elem['year'] = elem['year'][:4]
         else:
             elem['year'] = 'N/A'
-        if elem['id'] in [s.serial_id for s in serial_list]:
-            elem['in_list'] = True
-        else:
-            elem['in_list'] = False
+        elem['in_list'] = user_serials_check(request.user, elem['id'])
     result = {'popular_list': popular_list}
     return render(request, 'serial/popular.html', result)
 
 
 @login_required
 def on_air_today(request):
-    serial_list = models.Serial.objects.filter(owner=request.user)
     air_today_list = tmdb.TV().airing_today()['results']
     for elem in air_today_list:
-        elem['year'] = elem.get('first_air_date')
-        if elem['year']:
-            elem['year'] = elem['year'][:4]
-        else:
-            elem['year'] = 'N/A'
-        if elem['id'] in [s.serial_id for s in serial_list]:
-            elem['in_list'] = True
-        else:
-            elem['in_list'] = False
+        elem['year'] = elem['first_air_date'][:4]
+        elem['in_list'] = user_serials_check(request.user, elem['id'])
     result = {'air_today_list': air_today_list}
     return render(request, 'serial/on_air_today.html', result)
 

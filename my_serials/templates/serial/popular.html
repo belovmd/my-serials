@@ -88,13 +88,5 @@
 {% endblock %}
 
 {% block button %}
-  <div class="float-right align-bottom float-button">
-    <div class="shadow bg-white rounded">
-      <div class="btn-group btn-group-justified btn-block" role="group">
-        <a href="#top" class="btn btn-info" role="button">&#8593;</a>
-        <a href="{% url "my_serials:search" %}" class="btn btn-success" role="button">&#8981;</a>
-        <a href="#bottom" class="btn btn-info" role="button">&#8595;</a>
-      </div>
-    </div>
-  </div>
+  {% include "button.html" %}
 {% endblock %}

@@ -2,5 +2,4 @@ Django==3.0.4
 django-bootstrap4==1.1.1
 django-crispy-forms==1.9.0
 tmdbsimple==2.2.0
-requests==2.23.0
-
+pyTelegramBotAPI==3.6.7

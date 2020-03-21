@@ -56,10 +56,12 @@
               </li>
             </ul>
             <!--Navbar Dark Mode Switch-->
-            <div class="custom-control custom-switch mr-3">
-              <input type="checkbox" class="custom-control-input" id="darkSwitch">
-              <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
-              <script src="{% static "dark-mode-switch.min.js" %}"></script>
+            <div class="nav-link">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="darkSwitch">
+                <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+                <script src="{% static "dark-mode-switch.min.js" %}"></script>
+              </div>
             </div>
             <!--Navbar Welcome Message Login/Logout-->
             {% if request.user.is_authenticated %}
