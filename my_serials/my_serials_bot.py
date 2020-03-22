@@ -1,14 +1,14 @@
 from configparser import ConfigParser
 import tmdbsimple as tmdb
 import telebot
-
 import os
 import django
+
+
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django_project.settings")
 django.setup()
 
-# from your_project_path import settings as your_project_settings
-# from django.core.management import settings
 
 from my_serials.models import Serial, User
 from my_serials.views import serial_info
@@ -73,26 +73,27 @@ def send_text(message):
                 user = elem
 
         if not user:
-            bot.send_message(message.chat.id, '<b>You are not connected to data base!</b>', parse_mode='HTML')
+            bot.send_message(message.chat.id,
+                             '<b>You are not connected to data base!</b>\n'
+                             'Enter your <i>chat id</i> on edit profile page',
+                             parse_mode='HTML')
         else:
             serial_list = Serial.objects.filter(owner=user).order_by('title')
             text_message = '<u>My Serials:</u>\n'
             for elem in serial_list:
                 tv = serial_info(elem.serial_id)
+                text = "<b>{} ({})</b>\n".format(tv['name'], tv['first_air_date'][:4])
+                text_message += text
                 if tv.get('next_overview'):
-                    text = "<b>{} ({})</b>\n".format(tv['name'], tv['first_air_date'][:4])
-                    text_message += text
-                    text = "<i>{} {}</i>\n{}\n\n".format(tv['next_date'], tv['next_name'], tv['next_overview'])
+                    text = "<i>{} {}</i>\n{}\n\n".format(tv['next_date'],
+                                                         tv['next_name'],
+                                                         tv['next_overview'])
                     text_message += text
                 else:
-                    text_message = 'No data currently available'
+                    error_text = 'Data currently unavailable\n\n'
+                    text_message += error_text
             bot.send_message(message.chat.id, text_message, parse_mode='HTML')
 
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
-
-
-
-
-

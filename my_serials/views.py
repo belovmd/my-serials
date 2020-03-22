@@ -1,8 +1,11 @@
 import tmdbsimple as tmdb
 
 from configparser import ConfigParser
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from . import forms
@@ -183,8 +186,6 @@ def register(request):
                 user_form.cleaned_data['password'],
             )
             new_user.save()
-            # models.Profile.objects.create(user=new_user,
-            #                               photo='unknown.jpeg')
             return render(request, 'registration/register_done.html', {'new_user': new_user})
     else:
         user_form = forms.UserRegistrationForm()
@@ -194,14 +195,19 @@ def register(request):
 
 
 @login_required
+@transaction.atomic
 def edit(request):
     if request.method == 'POST':
         user_form = forms.UserEditForm(instance=request.user,
                                        data=request.POST)
         profile_form = forms.ProfileEditForm(instance=request.user.profile,
                                              data=request.POST)
-        user_form.save()
-        profile_form.save()
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return HttpResponseRedirect('/')
+        else:
+            messages.error(request, 'Please correct the error below.')
     else:
         user_form = forms.UserEditForm(instance=request.user)
         profile_form = forms.ProfileEditForm(instance=request.user.profile)

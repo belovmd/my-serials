@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'bootstrap4',
+    'django_crontab',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -127,3 +128,8 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/login/'
 LOGOUT_URL = 'logout/'
 LOGIN_REDIRECT_URL = '/'
+
+
+CRONJOBS = [
+    ('*/1 * * * *', 'my_serials.cron.send_text')
+]

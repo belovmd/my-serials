@@ -3,3 +3,5 @@ django-bootstrap4==1.1.1
 django-crispy-forms==1.9.0
 tmdbsimple==2.2.0
 pyTelegramBotAPI==3.6.7
+schedule==0.6.0
+django-crontab==0.7.1
