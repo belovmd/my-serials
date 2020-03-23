@@ -154,12 +154,9 @@ def details(request, db_id=None):
 def popular(request):
     popular_list = tmdb.TV().popular()['results']
     for elem in popular_list:
-        elem['in_production'] = serial_info(elem['id'])['in_production']
-        elem['year'] = elem.get('first_air_date')
-        if elem['year']:
-            elem['year'] = elem['year'][:4]
-        else:
-            elem['year'] = 'N/A'
+        tv = serial_info(elem['id'])
+        elem['in_production'] = tv['in_production']
+        elem['year'] = tv['first_air_date'][:4]
         elem['in_list'] = user_serials_check(request.user, elem['id'])
     result = {'popular_list': popular_list}
     return render(request, 'serial/popular.html', result)
@@ -212,4 +209,5 @@ def edit(request):
     return render(request,
                   'registration/edit.html',
                   {'user_form': user_form,
-                   'profile_form': profile_form})
+                   'profile_form': profile_form}
+                  )
