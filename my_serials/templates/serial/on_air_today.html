@@ -59,10 +59,16 @@
     </div>
     <div class="media-body">
       <h3 class="mt-0" align="center"><a href="{% url 'my_serials:details' %}{{ serial.id }}">{{ serial.name }} ({{ serial.year}})</a></h3>
-      {% if not serial.in_list %}
+      {% if serial.in_production %}
+        {% if not serial.in_list %}
+        {% else %}
+          <div class="alert alert-warning text-center" role="alert">
+            Already in your list
+          </div>
+        {% endif %}
       {% else %}
         <div class="alert alert-warning text-center" role="alert">
-          Already in your list
+          Show is canceled
         </div>
       {% endif %}
       <p>{{ serial.overview }}</p>

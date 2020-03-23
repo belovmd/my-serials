@@ -166,7 +166,9 @@ def popular(request):
 def on_air_today(request):
     air_today_list = tmdb.TV().airing_today()['results']
     for elem in air_today_list:
-        elem['year'] = elem['first_air_date'][:4]
+        tv = serial_info(elem['id'])
+        elem['in_production'] = tv['in_production']
+        elem['year'] = tv['first_air_date'][:4]
         elem['in_list'] = user_serials_check(request.user, elem['id'])
     result = {'air_today_list': air_today_list}
     return render(request, 'serial/on_air_today.html', result)

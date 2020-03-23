@@ -40,8 +40,10 @@ tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 # print(tv.info())
 # tvs = tmdb.TV().popular()
 # print(tvs)
-pop = tmdb.TV(60735).info()
-print(pop)
+popular_list = tmdb.TV().popular()['results']
+air_today_list = tmdb.TV().airing_today()['results']
+print(air_today_list)
+
 # print(seasons)
 # for season in seasons:
 #     tv_s = tmdb.TV_Seasons(60735, season['season_number']).info()['episodes']

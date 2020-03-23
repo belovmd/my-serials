@@ -16,7 +16,10 @@
           {{ profile_form|crispy }}
           {% csrf_token %}
           <div class="row justify-content-center">
-            <button type="submit" class="btn btn-success" value="Save Changes">Save Changes</button>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="submit" class="btn btn-success" value="Save Changes">Save Changes</button>
+              <a href="{% url "my_serials:password_change" %}" class="btn btn-primary" role="button">Change Password</a>
+            </div>
           </div>
         </form>
       </div>

@@ -1,29 +1,27 @@
 {% extends "base.html" %}
+
 {% block title%} Login {% endblock%}
+
 {% block content%}
-<!--{% if form.errors %}-->
-<!--    <div class="alert alert-danger" role="alert">-->
-<!--        Wrong username or password-->
-<!--    </div>-->
-<!--{% endif %}-->
+
 {% load crispy_forms_tags %}
 <div class="mt-3 mb-3">
-    <h2>Login</h2>
+  <h2>Login</h2>
 </div>
 <div class="row justify-content-center">
-    <div class="col-6">
-        <form action="{% url "my_serials:login" %}" method="post">
-            {{ form|crispy }}
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ next }}">
-            <div class="row justify-content-center">
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="submit" value="login" class="btn btn-success">Login</button>
-                    <a href="{% url "my_serials:register" %}" class="btn btn-primary" role="button">Register</a>
-                    <a href="{% url "my_serials:password_reset" %}" class="btn btn-info" role="button">Forgot password?</a>
-                </div>
-            </div>
-        </form>
+  <div class="col-6">
+    <form action="{% url "my_serials:login" %}" method="post">
+    {{ form|crispy }}
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    <div class="row justify-content-center">
+      <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="submit" value="login" class="btn btn-success">Login</button>
+        <a href="{% url "my_serials:register" %}" class="btn btn-primary" role="button">Register</a>
+        <a href="{% url "my_serials:password_reset" %}" class="btn btn-info" role="button">Forgot password?</a>
+      </div>
     </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
