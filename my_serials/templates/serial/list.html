@@ -50,7 +50,9 @@
       <div class="media-body">
         <h3 class="mt-0" align="center"><a href="{% url 'my_serials:details' %}{{ serial.serial_id }}">{{ serial.title }} ({{ serial.air_date }})</a></h3>
         {% if serial.next_name %}
-          <p>Next Episode: {{ serial.next_date }} {{ serial.next_name }}</p>
+          <p>Next: Season {{ serial.next_season_number }} Episode {{ serial.next_episode_number }}</p>
+          <p>Date: {{ serial.next_date }}</p>
+          <p>Name: {{ serial.next_name }}</p>
           <p>{{ serial.next_overview }}</p>
         {% else %}
           <div class="alert alert-info text-center" role="alert">
@@ -60,7 +62,7 @@
         <hr class="mt-2 mb-2">
         {% if serial.last_name %}
           <div class="text-muted">
-            <p>Previous Episode: {{ serial.last_date }} {{ serial.last_name }}</p>
+            <p>Previous Episode: {{ serial.last_episode_number }} Date: {{ serial.last_date }} Name: {{ serial.last_name }}</p>
             <p>{{ serial.last_overview }}</p>
           </div>
         {% endif %}

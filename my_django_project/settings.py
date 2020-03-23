@@ -131,5 +131,6 @@ LOGIN_REDIRECT_URL = '/'
 
 
 CRONJOBS = [
-    ('*/1 * * * *', 'my_serials.cron.send_text')
+    ('0 10 * * *', 'my_serials.cron.send_text'),
+    ('@reboot', 'my_serials.cron.start_bot')
 ]

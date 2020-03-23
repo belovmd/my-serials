@@ -1,11 +1,8 @@
 from django.db import models
-from django.db.models import UniqueConstraint
-from django.utils import timezone
-from django.contrib.auth.models import User
-from django.conf import settings
-from django.urls import reverse
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
+from django.contrib.auth.models import User
 
 
 class Serial(models.Model):
@@ -22,25 +19,12 @@ class Serial(models.Model):
             models.UniqueConstraint(fields=['serial_id', 'owner'], name='unique_serial_for_user')
         ]
 
-    # very slow page load
-    # def serial_info(self):
-    #     tv = tmdb.TV(self.serial_id).info()
-    #     result = {'poster_path': tv['poster_path']}
-    #     if tv['last_episode_to_air']:
-    #         result['last_date'] = tv['last_episode_to_air']['air_date']
-    #         result['last_name'] = tv['last_episode_to_air']['name']
-    #         result['last_overview'] = tv['last_episode_to_air']['overview']
-    #     if tv['next_episode_to_air']:
-    #         result['next_date'] = tv['next_episode_to_air']['air_date']
-    #         result['next_name'] = tv['next_episode_to_air']['name']
-    #         result['next_overview'] = tv['next_episode_to_air']['overview']
-    #     return result
-
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE)
     telegram_id = models.IntegerField(blank=True, null=True, unique=True)
+    objects = models.Manager()
 
     def __str__(self):
         return "Profile for {}".format(self.user.username)

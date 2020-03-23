@@ -37,10 +37,14 @@ def serial_info(serial_id):
     else:
         info['first_air_date'] = 'N/A'
     if tv['last_episode_to_air']:
+        info['last_season_number'] = tv['last_episode_to_air']['season_number']
+        info['last_episode_number'] = tv['last_episode_to_air']['episode_number']
         info['last_date'] = tv['last_episode_to_air']['air_date']
         info['last_name'] = tv['last_episode_to_air']['name']
         info['last_overview'] = tv['last_episode_to_air']['overview']
     if tv['next_episode_to_air']:
+        info['next_season_number'] = tv['next_episode_to_air']['season_number']
+        info['next_episode_number'] = tv['next_episode_to_air']['episode_number']
         info['next_date'] = tv['next_episode_to_air']['air_date']
         info['next_name'] = tv['next_episode_to_air']['name']
         info['next_overview'] = tv['next_episode_to_air']['overview']
@@ -102,12 +106,6 @@ def my_serials_list(request):
         serials.append(result)
     result = {'serials': serials}
     return render(request, 'serial/list.html', result)
-
-
-# def all_serials(request):
-#     serial_list = models.Serial.objects.filter(owner=request.user).order_by('title')
-#     result = {'serials': serial_list}
-#     return render(request, 'serial/list.html', result)
 
 
 @login_required
