@@ -60,7 +60,11 @@
             <!--Navbar Welcome Message Login/Logout-->
             {% if request.user.is_authenticated %}
               <div class="navbar-text">
-                <a class="nav-link" href="{% url "my_serials:profile" %}">Welcome, {{ request.user.first_name }}!</a>
+                {% if request.user.first_name %}
+                  <a class="nav-link" href="{% url "my_serials:profile" %}">Welcome <b>{{ request.user.first_name }}</b></a>
+                {% else %}
+                  <a class="nav-link" href="{% url "my_serials:profile" %}">Welcome <b>{{ request.user.username }}</b></a>
+                {% endif %}
               </div>
               <span class="navbar-text">
                 <a class="nav-link" href="{% url "my_serials:logout" %}">Logout</a>
