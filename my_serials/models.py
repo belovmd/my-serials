@@ -16,7 +16,8 @@ class Serial(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['serial_id', 'owner'], name='unique_serial_for_user')
+            models.UniqueConstraint(fields=['serial_id', 'owner'],
+                                    name='unique_serial_for_user')
         ]
 
 

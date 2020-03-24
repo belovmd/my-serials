@@ -9,7 +9,7 @@
   <h2>Login</h2>
 </div>
 <div class="row justify-content-center">
-  <div class="col-6">
+  <div class="col-8">
     <form action="{% url "my_serials:login" %}" method="post">
     {{ form|crispy }}
     {% csrf_token %}

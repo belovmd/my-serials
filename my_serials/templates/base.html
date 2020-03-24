@@ -10,7 +10,6 @@
   <title>{% block title %}My Serials{% endblock %}</title>
   <link rel="icon" type="image/png" href="{% static 'resources/movie-icon.png' %}">
   <!--Fancybox CSS-->
-  <!--  <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>-->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
 
   <!--Styles-->
@@ -61,7 +60,7 @@
             <!--Navbar Welcome Message Login/Logout-->
             {% if request.user.is_authenticated %}
               <div class="navbar-text">
-                <a class="nav-link" href="{% url "my_serials:edit" %}">Welcome, {{ request.user.first_name }}!</a>
+                <a class="nav-link" href="{% url "my_serials:profile" %}">Welcome, {{ request.user.first_name }}!</a>
               </div>
               <span class="navbar-text">
                 <a class="nav-link" href="{% url "my_serials:logout" %}">Logout</a>
@@ -89,7 +88,7 @@
         <!--Footer-->
         <div class="container" id="bottom">
           <nav class="navbar navbar-light bg-light my-footer">
-            <span class="text-muted">Eldar Dniaprouski &copy 2020 Powered by Bootstrap</span>
+            <span class="text-muted">Django project for IT-Academy by Eldar Dniaprouski &copy 2020</span>
           </nav>
         </div>
       </div>

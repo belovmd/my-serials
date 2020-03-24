@@ -6,16 +6,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from . import forms
 from . import models
 
-from django.core.mail import send_mail
-from django.contrib.auth.models import User
-from django.views.generic import ListView
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 # config = ConfigParser()
 # config.read('my_serials/config.cfg')
@@ -59,9 +54,13 @@ def serial_credits(serial_id):
     return credits_list
 
 
+def user_serials(some_user):
+    return models.Serial.objects.filter(owner=some_user)
+
+
 def user_serials_check(some_user, serial_id):
-    serial_list = models.Serial.objects.filter(owner=some_user)
-    if serial_id in [s.serial_id for s in serial_list]:
+    serial_list = user_serials(some_user)
+    if serial_id in [serial.serial_id for serial in serial_list]:
         response = True
     else:
         response = False
@@ -70,7 +69,7 @@ def user_serials_check(some_user, serial_id):
 
 def add_serial(request):
     if request.method == 'POST':
-        serial_list = models.Serial.objects.filter(owner=request.user)
+        serial_list = user_serials(request.user)
         id_list = [int(s.serial_id) for s in serial_list]
         new_serial = models.Serial()
         new_serial.serial_id = request.POST.get('serial_id')
@@ -94,7 +93,7 @@ def delete(request, serial_id):
 
 @login_required
 def my_serials_list(request):
-    serial_list = models.Serial.objects.filter(owner=request.user).order_by('title')
+    serial_list = user_serials(request.user).order_by('title')
     serials = []
     for serial in serial_list:
         result = {'title': serial.title,
@@ -113,11 +112,11 @@ def search(request):
     query = str(request.GET.get('query', ''))
     if query != '':
         response = tmdb.Search().tv(query=query)['results']
-        search_result = [serial for serial in response if serial['poster_path']]
+        search_result = [tv for tv in response if tv['poster_path']]
         for elem in search_result:
-            tv = serial_info(elem['id'])
-            elem['in_production'] = tv['in_production']
-            elem['year'] = tv['first_air_date'][:4]
+            serial = serial_info(elem['id'])
+            elem['in_production'] = serial['in_production']
+            elem['year'] = serial['first_air_date'][:4]
             elem['in_list'] = user_serials_check(request.user, elem['id'])
         result = {'search_result': search_result}
     else:
@@ -126,18 +125,18 @@ def search(request):
 
 
 @login_required
-def details(request, db_id=None):
+def details(request, db_id):
     tv = serial_info(db_id)
     credits_list = serial_credits(db_id)
-    serial = list(models.Serial.objects.
-                  filter(owner=request.user, serial_id=db_id).values('id'))
-    if serial:
-        serial_id = serial[0]['id']
-    else:
+    try:
+        serial_id = models.Serial.objects.get(owner=request.user,
+                                              serial_id=db_id).id
+    except ObjectDoesNotExist:
         serial_id = None
     seasons = tv['seasons']
     for season in seasons:
-        tv_s = tmdb.TV_Seasons(db_id, season['season_number']).info()['episodes']
+        tv_s = tmdb.TV_Seasons(db_id,
+                               season['season_number']).info()['episodes']
         season['episodes'] = tv_s
     result = {
         'serial_id': serial_id,
@@ -183,7 +182,8 @@ def register(request):
                 user_form.cleaned_data['password'],
             )
             new_user.save()
-            return render(request, 'registration/register_done.html', {'new_user': new_user})
+            return render(request, 'registration/register_done.html',
+                          {'new_user': new_user})
     else:
         user_form = forms.UserRegistrationForm()
     return render(request,
@@ -193,7 +193,7 @@ def register(request):
 
 @login_required
 @transaction.atomic
-def edit(request):
+def edit_profile(request):
     if request.method == 'POST':
         user_form = forms.UserEditForm(instance=request.user,
                                        data=request.POST)
@@ -202,14 +202,14 @@ def edit(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/home')
         else:
-            messages.error(request, 'Please correct the error below.')
+            messages.error(request, 'Please correct the error.')
     else:
         user_form = forms.UserEditForm(instance=request.user)
         profile_form = forms.ProfileEditForm(instance=request.user.profile)
     return render(request,
-                  'registration/edit.html',
+                  'registration/profile.html',
                   {'user_form': user_form,
                    'profile_form': profile_form}
                   )

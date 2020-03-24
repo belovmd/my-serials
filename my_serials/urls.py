@@ -1,12 +1,15 @@
-from django.urls import path
 from django.contrib.auth import views as au_views
+from django.shortcuts import redirect
+from django.urls import path, reverse_lazy
+from django.views.generic import RedirectView
 from . import views
-from django.urls import reverse_lazy
 
 app_name = 'my_serials'
 
 urlpatterns = [
-    path('', views.my_serials_list, name='my_serials_list'),
+    # path('', lambda request: redirect('home/')),
+    path('', RedirectView.as_view(url='home/')),
+    path('home/', views.my_serials_list, name='my_serials_list'),
     path('search/', views.search, name='search'),
     path('add/', views.add_serial, name='add_serial'),
     path('delete/', views.delete, name='delete'),
@@ -17,7 +20,7 @@ urlpatterns = [
     path('on_air_today/', views.on_air_today, name='on_air_today'),
     # Registration/Profile edit
     path('register/', views.register, name='register'),
-    path('edit/', views.edit, name='edit'),
+    path('profile/', views.edit_profile, name='profile'),
     # Login/Logout
     path('login/', au_views.LoginView.as_view(), name='login'),
     path('logout/', au_views.LogoutView.as_view(), name='logout'),

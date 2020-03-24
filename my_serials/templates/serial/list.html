@@ -62,7 +62,7 @@
         <hr class="mt-2 mb-2">
         {% if serial.last_name %}
           <div class="text-muted">
-            <p>Previous Episode: {{ serial.last_episode_number }} Date: {{ serial.last_date }} Name: {{ serial.last_name }}</p>
+            <p>Previous: Season {{ serial.last_season_number }} Episode {{ serial.last_episode_number }} Date: {{ serial.last_date }} Name: {{ serial.last_name }}</p>
             <p>{{ serial.last_overview }}</p>
           </div>
         {% endif %}
