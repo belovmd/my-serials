@@ -4,6 +4,7 @@ import telebot
 import schedule
 import time
 import tmdbsimple as tmdb
+from django.core.management.base import BaseCommand
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django_project.settings")
 django.setup()
@@ -41,7 +42,7 @@ def send_notification():
                 pass
 
 
-schedule.every(2).minutes.do(send_notification)
+schedule.every(30).minutes.do(send_notification)
 # schedule.every().hour.do(job)
 # schedule.every().day.at("10:30").do(job)
 # schedule.every(5).to(10).minutes.do(job)
@@ -50,11 +51,10 @@ schedule.every(2).minutes.do(send_notification)
 # schedule.every().minute.at(":17").do(job)
 
 
-def start_notification():
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+class Command(BaseCommand):
+    help = 'Notification bot'
 
-
-if __name__ == '__main__':
-    start_notification()
+    def handle(self, *args, **kwargs):
+        while True:
+            schedule.run_pending()
+            time.sleep(1)

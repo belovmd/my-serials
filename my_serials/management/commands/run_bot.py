@@ -3,6 +3,7 @@ import os
 import telebot
 import tmdbsimple as tmdb
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.management.base import BaseCommand
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django_project.settings")
 django.setup()
@@ -117,9 +118,8 @@ def send_text(message):
             bot.send_message(message.chat.id, text_message, parse_mode='HTML')
 
 
-def start_bot():
-    bot.polling(none_stop=True)
+class Command(BaseCommand):
+    help = 'Start bot'
 
-
-if __name__ == '__main__':
-    start_bot()
+    def handle(self, *args, **kwargs):
+        bot.polling(none_stop=True)
