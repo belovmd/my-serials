@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 
 class Serial(models.Model):
     serial_id = models.IntegerField()
-    title = models.CharField(max_length=50)
-    air_date = models.CharField(max_length=50, default='N/A')
+    title = models.CharField(max_length=150)
+    air_date = models.CharField(max_length=4)
     owner = models.ForeignKey(User,
                               on_delete=models.CASCADE,
                               related_name='user_serials')

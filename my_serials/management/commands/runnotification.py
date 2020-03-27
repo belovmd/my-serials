@@ -42,7 +42,7 @@ def send_notification():
                 pass
 
 
-schedule.every(30).minutes.do(send_notification)
+schedule.every(15).minutes.do(send_notification)
 # schedule.every().hour.do(job)
 # schedule.every().day.at("10:30").do(job)
 # schedule.every(5).to(10).minutes.do(job)

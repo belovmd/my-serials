@@ -67,6 +67,7 @@ def user_serials_check(some_user, serial_id):
     return response
 
 
+@login_required
 def add_serial(request):
     if request.method == 'POST':
         serial_list = user_serials(request.user)
@@ -82,6 +83,7 @@ def add_serial(request):
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
+@login_required
 def delete(request, serial_id):
     try:
         serial = models.Serial.objects.get(id=serial_id)
