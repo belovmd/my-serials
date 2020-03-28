@@ -6,7 +6,7 @@ import time
 import tmdbsimple as tmdb
 from django.core.management.base import BaseCommand
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_serials_project.settings")
 django.setup()
 
 from my_serials.models import Serial, User, Profile

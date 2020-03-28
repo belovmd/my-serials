@@ -28,14 +28,14 @@ class SerialTestCase(TestCase):
         self.assertEqual(serial.air_date, '2014')
         self.assertEqual(serial.owner, self.user)
 
-    # @ddt.data(
-    #     (60735, 'The Flash'),
-    #     (82856, 'The Mandalorian'),
-    #     (79744, 'The Rookie'),
-    # )
-    # @ddt.unpack
-    # def test_right_title_created(self, serial_id, expected_title):
-    #     response = self.client.post('/add/', {'serial_id': serial_id})
-    #     serials = models.Serial.objects.all()
-    #     for serial in serials:
-    #         self.assertEqual(serial.title, expected_title)
+    @ddt.data(
+        (60735, 'The Flash'),
+        (82856, 'The Mandalorian'),
+        (79744, 'The Rookie'),
+    )
+    @ddt.unpack
+    def test_right_title_created(self, serial_id, expected_title):
+        response = self.client.post('/add/', {'serial_id': serial_id})
+        serials = models.Serial.objects.all()
+        for serial in serials:
+            self.assertEqual(serial.title, expected_title)

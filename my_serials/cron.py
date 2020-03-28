@@ -4,7 +4,7 @@ import telebot
 import tmdbsimple as tmdb
 from django.core.exceptions import ObjectDoesNotExist
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_django_project.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "my_serials_project.settings")
 django.setup()
 
 from my_serials.models import Serial, User, Profile
