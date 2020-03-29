@@ -41,9 +41,16 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'django_crontab',
+    'django_nose',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=my_serials',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
