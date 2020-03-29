@@ -2,6 +2,8 @@
 
 {% block title %}Popular{% endblock %}
 
+{% load static %}
+
 {% block content %}
   <div class="mt-3 mb-3">
     <h2>Popular Serials</h2>
@@ -10,7 +12,11 @@
   <div class="media">
     <div>
       <div class="text-center">
-        <a data-fancybox="gallery{{ serial.id }}" href="https://image.tmdb.org/t/p/original{{ serial.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image"></a>
+        {% if serial.poster_path %}
+          <a data-fancybox="gallery{{ serial.id }}" href="https://image.tmdb.org/t/p/original{{ serial.poster_path }}"><img class="align-self-start mr-3" src="https://image.tmdb.org/t/p/w200{{ serial.poster_path }}" alt="Generic placeholder image"></a>
+        {% else %}
+          <p><img class="align-self-start mr-3" src="{% static 'resources/no-poster-available.png' %}" width="200px"></p>
+        {% endif %}
       </div>
       <p>
         {% if serial.in_production %}

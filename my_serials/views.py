@@ -113,8 +113,9 @@ def my_serials_list(request):
 def search(request):
     query = str(request.GET.get('query', ''))
     if query != '':
-        response = tmdb.Search().tv(query=query)['results']
-        search_result = [tv for tv in response if tv['poster_path']]
+        # response = tmdb.Search().tv(query=query)['results']
+        # search_result = [tv for tv in response if tv['poster_path']]
+        search_result = tmdb.Search().tv(query=query)['results']
         for elem in search_result:
             serial = serial_info(elem['id'])
             elem['in_production'] = serial['in_production']
