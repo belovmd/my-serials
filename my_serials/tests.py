@@ -29,12 +29,12 @@ class SerialTestCase(TestCase):
 
     def test_edit_profile(self):
         self.client.login(username='root', password='root')
-        response = self.client.post('/profile/',
-                                    data={'first_name': 'John',
-                                          'second_name': 'Doe',
-                                          'email': 'test2@example.com',
-                                          'telegram_id': 123456789}
-                                    )
+        self.client.post('/profile/',
+                         data={'first_name': 'John',
+                               'second_name': 'Doe',
+                               'email': 'test2@example.com',
+                               'telegram_id': 123456789}
+                         )
         profile = models.Profile.objects.get(telegram_id=123456789)
         user = models.User.objects.get(profile=profile)
         self.assertEqual(user.first_name, 'John')
@@ -63,9 +63,9 @@ class SerialTestCase(TestCase):
 
     def test_serial_create(self):
         self.client.login(username='root', password='root')
-        response = self.client.post('/add/',
-                                    {'serial_id': 60735},
-                                    HTTP_REFERER='/home')
+        self.client.post('/add/',
+                         {'serial_id': 60735},
+                         HTTP_REFERER='/home')
         serial = models.Serial.objects.get()
         self.assertEqual(serial.serial_id, 60735)
         self.assertEqual(serial.title, 'The Flash')
@@ -141,9 +141,9 @@ class SerialTestCase(TestCase):
     @ddt.unpack
     def test_right_title_created(self, serial_id, expected_title):
         self.client.login(username='root', password='root')
-        response = self.client.post('/add/',
-                                    {'serial_id': serial_id},
-                                    HTTP_REFERER='/home')
+        self.client.post('/add/',
+                         {'serial_id': serial_id},
+                         HTTP_REFERER='/home')
         serial = models.Serial.objects.get()
         self.assertEqual(serial.title, expected_title)
 
@@ -155,9 +155,9 @@ class SerialTestCase(TestCase):
     @ddt.unpack
     def test_right_air_date_created(self, serial_id, expected_date):
         self.client.login(username='root', password='root')
-        response = self.client.post('/add/',
-                                    {'serial_id': serial_id},
-                                    HTTP_REFERER='/home')
+        self.client.post('/add/',
+                         {'serial_id': serial_id},
+                         HTTP_REFERER='/home')
         serial = models.Serial.objects.get()
         self.assertEqual(serial.air_date, expected_date)
 
@@ -165,12 +165,22 @@ class SerialTestCase(TestCase):
         tv_info = views.serial_info(60735)
         self.assertEqual(tv_info['name'], 'The Flash')
 
-    def test_user_serials(self):
+    def test_user_serials_check(self):
         self.client.login(username='root', password='root')
-        response = self.client.post('/add/',
-                                    {'serial_id': 60735},
-                                    HTTP_REFERER='/home')
+        self.client.post('/add/',
+                         {'serial_id': 60735},
+                         HTTP_REFERER='/home')
         serial_check_one = views.user_serials_check(self.user, 60735)
         serial_check_two = views.user_serials_check(self.user, 79744)
         self.assertEqual(serial_check_one, True)
         self.assertEqual(serial_check_two, False)
+
+    def test_user_serials(self):
+        self.client.login(username='root', password='root')
+        self.client.post('/add/',
+                         {'serial_id': 60735},
+                         HTTP_REFERER='/home')
+        serial_list = views.user_serials(self.user)
+        for serial in serial_list:
+            self.assertEqual(serial.title, 'The Flash')
+            self.assertEqual(serial.air_date, '2014')
