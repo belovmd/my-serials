@@ -180,8 +180,9 @@ def register(request):
                 user_form.cleaned_data['password'],
             )
             new_user.save()
+            registered_user = {'new_user': new_user}
             return render(request, 'registration/register_done.html',
-                          {'new_user': new_user})
+                          registered_user)
     else:
         user_form = forms.UserRegistrationForm()
     return render(request,
@@ -206,8 +207,5 @@ def edit_profile(request):
     else:
         user_form = forms.UserEditForm(instance=request.user)
         profile_form = forms.ProfileEditForm(instance=request.user.profile)
-    return render(request,
-                  'registration/profile.html',
-                  {'user_form': user_form,
-                   'profile_form': profile_form}
-                  )
+    result = {'user_form': user_form, 'profile_form': profile_form}
+    return render(request, 'registration/profile.html', result)

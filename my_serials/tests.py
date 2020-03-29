@@ -1,7 +1,7 @@
 import ddt
 import tmdbsimple as tmdb
 from django.test import TestCase, Client
-from my_serials import models
+from my_serials import models, views
 
 tmdb.API_KEY = '71af347ad6265c67d36f595aa27ea28c'
 
@@ -16,6 +16,50 @@ class SerialTestCase(TestCase):
         self.user = models.User.objects.create(username='root')
         self.user.set_password('root')
         self.user.save()
+
+    def test_registration(self):
+        response = self.client.post('/register/',
+                                    data={'username': 'new_user',
+                                          'email': 'test@example.com',
+                                          'password': 'rootroot42',
+                                          'password2': 'rootroot42'}
+                                    )
+        user = models.User.objects.get(username='new_user')
+        self.assertEqual(response.context['new_user'], user)
+
+    def test_edit_profile(self):
+        self.client.login(username='root', password='root')
+        response = self.client.post('/profile/',
+                                    data={'first_name': 'John',
+                                          'second_name': 'Doe',
+                                          'email': 'test2@example.com',
+                                          'telegram_id': 123456789}
+                                    )
+        profile = models.Profile.objects.get(telegram_id=123456789)
+        user = models.User.objects.get(profile=profile)
+        self.assertEqual(user.first_name, 'John')
+        self.assertEqual(profile.telegram_id, 123456789)
+
+    def test_edit_profile_return_302(self):
+        self.client.login(username='root', password='root')
+        response = self.client.post('/profile/',
+                                    data={'first_name': 'John',
+                                          'second_name': 'Doe',
+                                          'email': 'test2@example.com',
+                                          'telegram_id': 123456789}
+                                    )
+        self.assertEqual(response.status_code, 302)
+
+    def test_login(self):
+        self.credentials = {'username': 'root',
+                            'password': 'root'}
+        response = self.client.post('/login/', self.credentials, follow=True)
+        self.assertTrue(response.context['user'].is_active)
+
+    def test_logout_return_200(self):
+        self.client.login(username='root', password='root')
+        response = self.client.get('/logout/')
+        self.assertEquals(response.status_code, 200)
 
     def test_serial_create(self):
         self.client.login(username='root', password='root')
@@ -50,6 +94,11 @@ class SerialTestCase(TestCase):
         self.client.login(username='root', password='root')
         response = self.client.get('/')
         self.assertEqual(response.status_code, 302)
+
+    def test_serial_list_return_200(self):
+        self.client.login(username='root', password='root')
+        response = self.client.get('/home/')
+        self.assertEqual(response.status_code, 200)
 
     def test_search_results(self):
         search_result = tmdb.Search().tv(query='Westworld')['results']
@@ -111,3 +160,17 @@ class SerialTestCase(TestCase):
                                     HTTP_REFERER='/home')
         serial = models.Serial.objects.get()
         self.assertEqual(serial.air_date, expected_date)
+
+    def test_serial_info(self):
+        tv_info = views.serial_info(60735)
+        self.assertEqual(tv_info['name'], 'The Flash')
+
+    def test_user_serials(self):
+        self.client.login(username='root', password='root')
+        response = self.client.post('/add/',
+                                    {'serial_id': 60735},
+                                    HTTP_REFERER='/home')
+        serial_check_one = views.user_serials_check(self.user, 60735)
+        serial_check_two = views.user_serials_check(self.user, 79744)
+        self.assertEqual(serial_check_one, True)
+        self.assertEqual(serial_check_two, False)
