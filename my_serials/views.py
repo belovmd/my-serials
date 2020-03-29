@@ -1,7 +1,5 @@
 import tmdbsimple as tmdb
-
 from configparser import ConfigParser
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -10,7 +8,6 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from . import forms
 from . import models
-
 
 # config = ConfigParser()
 # config.read('my_serials/config.cfg')
@@ -113,8 +110,6 @@ def my_serials_list(request):
 def search(request):
     query = str(request.GET.get('query', ''))
     if query != '':
-        # response = tmdb.Search().tv(query=query)['results']
-        # search_result = [tv for tv in response if tv['poster_path']]
         search_result = tmdb.Search().tv(query=query)['results']
         for elem in search_result:
             serial = serial_info(elem['id'])
